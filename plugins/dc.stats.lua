@@ -157,7 +157,7 @@ local function get_bot_stats()
 end
 
 local function run(msg, matches)
-  if matches[1]:lower() == "stats" then
+  if matches[1]:lower() == "stats1" then
     if msg.to.type == 'chat' then
       -- 解析第二个参数
       local day_id = os.date("%Y%m%d")
@@ -185,8 +185,8 @@ return {
   usage = "!stats: Returns a list of Username [telegram_id]: msg_num only top"..SHOW_LIMIT_NUM..'\n'.."!stats 20150528: Returns this day stats"..'\n'.."!stats all: Returns All days stats"..'\n'.."!stats 20150528 "..SHOW_LIMIT_NUM..": Returns a list only top "..SHOW_LIMIT_NUM..'\n',
   patterns = {
     "^!([Ss]tats1)$",
-    "^!([Ss]tats1) (.*)$",
-    "^!([Ss]tats1) (.*) (.*)$"
+    "^!([Ss]tats1) (.+)$",
+    "^!([Ss]tats1) (.+) (.+)$"
     },
   run = run,
   pre_process = pre_process
