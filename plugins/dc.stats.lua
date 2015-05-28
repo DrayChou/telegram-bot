@@ -30,7 +30,7 @@ local function get_msgs_user_chat(user_id, chat_id, day_id)
     local user = redis:hgetall(uhash)
     
     local um_hash = 'msgs:'..user_id..':'..chat_id..':'..day_id
-    if day_id:lower() == 'all' then
+    if day_id == 'ALL' then
         um_hash = 'msgs:'..user_id..':'..chat_id
     end
     
@@ -161,15 +161,15 @@ local function run(msg, matches)
         if msg.to.type == 'chat' then
             -- 解析第二个参数
             local day_id = os.date("%Y%m%d")
-            if matches[2] then
-                day_id = matches[2]
-            end
+--            if matches[2] then
+--                day_id = matches[2]:upper()
+--            end
             
             -- 解析查询的数量
             local limit = DEFAULT_SHOW_LIMIT
-            if matches[3] then
-                limit = matches[3]
-            end
+--            if matches[3] then
+--                limit = tonumber(matches[3])
+--            end
             
             return get_msg_num_stats(msg, day_id, limit)
         elseif is_sudo(msg) then
@@ -184,7 +184,7 @@ local usage_txt = ""
 usage_txt = usage_txt.."!stats: Returns a list of Username [telegram_id]: msg_num only top"..DEFAULT_SHOW_LIMIT..'\n'
 usage_txt = usage_txt.."!stats 20150528: Returns this day stats"..'\n'
 usage_txt = usage_txt.."!stats all: Returns All days stats"..'\n'
-usage_txt = usage_txt.."!stats 20150528 "..DEFAULT_SHOW_LIMIT..": Returns a list only top "..DEFAULT_SHOW_LIMIT..'\n',
+usage_txt = usage_txt.."!stats 20150528 "..DEFAULT_SHOW_LIMIT..": Returns a list only top "..DEFAULT_SHOW_LIMIT..'\n'
 
 return {
     description = "Plugin to update user stats.",
