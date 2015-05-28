@@ -100,6 +100,9 @@ local function pre_process(msg)
         if msg.from.last_name then
             redis:hset(hash, 'last_name', msg.from.last_name)
         end
+        if msg.from.user_name then
+            redis:hset(hash, 'user_name', msg.from.user_name)
+        end
     end
     
     -- Save stats on Redis
