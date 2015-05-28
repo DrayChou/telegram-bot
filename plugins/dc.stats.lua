@@ -29,15 +29,13 @@ local function get_msgs_user_chat(user_id, chat_id, day_id)
   local uhash = 'user:'..user_id
   local user = redis:hgetall(uhash)
 
-  if day_id:upper() == 'ALL' then
-    local um_hash = 'msgs:'..user_id..':'..chat_id
-  else
-    local um_hash = 'msgs:'..user_id..':'..chat_id..':'..day_id
+  local um_hash = 'msgs:'..user_id..':'..chat_id..':'..day_id
+  if day_id:lower() == 'all' then
+    um_hash = 'msgs:'..user_id..':'..chat_id
   end
 
   user_info.name = user_print_name(user)..' ('..user_id..')'
   user_info.msgs = tonumber(redis:get(um_hash) or 0)
-
   return user_info
 end
 
@@ -162,9 +160,9 @@ local function run(msg, matches)
   if matches[1]:lower() == "stats" then
     if msg.to.type == 'chat' then
       -- 解析第二个参数
-      local day = os.date("%Y%m%d")
+      local day_id = os.date("%Y%m%d")
       if matches[2] then
-          day = matches[2]
+        day_id = matches[2]
       end
 
       -- 解析查询的数量
@@ -173,7 +171,7 @@ local function run(msg, matches)
           limit = matches[3]
       end
 
-      return get_msg_num_stats(msg, day, limit)
+      return get_msg_num_stats(msg, day_id, limit)
     elseif is_sudo(msg) then
       return get_bot_stats()
     else
@@ -184,10 +182,7 @@ end
 
 return {
   description = "Plugin to update user stats.",
-  usage = "!stats: Returns a list of Username [telegram_id]: msg_num only top"..SHOW_LIMIT_NUM..'\n',
-  usage = usage.."!stats 20150528: Returns this day stats"..'\n',
-  usage = usage.."!stats all: Returns All days stats"..'\n',
-  usage = usage.."!stats 20150528 "..SHOW_LIMIT_NUM..": Returns a list only top "..SHOW_LIMIT_NUM..'\n',
+  usage = "!stats: Returns a list of Username [telegram_id]: msg_num only top"..SHOW_LIMIT_NUM..'\n'.."!stats 20150528: Returns this day stats"..'\n'.."!stats all: Returns All days stats"..'\n'.."!stats 20150528 "..SHOW_LIMIT_NUM..": Returns a list only top "..SHOW_LIMIT_NUM..'\n',
   patterns = {
     "^!([Ss]tats1)$",
     "^!([Ss]tats1) (.*)$",
