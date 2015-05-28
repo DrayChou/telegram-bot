@@ -166,7 +166,7 @@ local function run(msg, matches)
       end
 
       -- 解析查询的数量
-      local limit = SHOW_LIMIT_NUM
+      local limit = DEFAULT_SHOW_LIMIT
       if matches[3] then
           limit = matches[3]
       end
@@ -181,10 +181,10 @@ local function run(msg, matches)
 end
 
 local usage_txt = ""
-usage_txt = usage_txt.."!stats: Returns a list of Username [telegram_id]: msg_num only top"..SHOW_LIMIT_NUM..'\n'
+usage_txt = usage_txt.."!stats: Returns a list of Username [telegram_id]: msg_num only top"..DEFAULT_SHOW_LIMIT..'\n'
 usage_txt = usage_txt.."!stats 20150528: Returns this day stats"..'\n'
 usage_txt = usage_txt.."!stats all: Returns All days stats"..'\n'
-usage_txt = usage_txt.."!stats 20150528 "..SHOW_LIMIT_NUM..": Returns a list only top "..SHOW_LIMIT_NUM..'\n',
+usage_txt = usage_txt.."!stats 20150528 "..DEFAULT_SHOW_LIMIT..": Returns a list only top "..DEFAULT_SHOW_LIMIT..'\n',
 
 return {
   description = "Plugin to update user stats.",
