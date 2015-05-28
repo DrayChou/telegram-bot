@@ -180,9 +180,15 @@ local function run(msg, matches)
   end
 end
 
+local usage_txt = ""
+usage_txt = usage_txt.."!stats: Returns a list of Username [telegram_id]: msg_num only top"..SHOW_LIMIT_NUM..'\n'
+usage_txt = usage_txt.."!stats 20150528: Returns this day stats"..'\n'
+usage_txt = usage_txt.."!stats all: Returns All days stats"..'\n'
+usage_txt = usage_txt.."!stats 20150528 "..SHOW_LIMIT_NUM..": Returns a list only top "..SHOW_LIMIT_NUM..'\n',
+
 return {
   description = "Plugin to update user stats.",
-  usage = "!stats: Returns a list of Username [telegram_id]: msg_num only top"..SHOW_LIMIT_NUM..'\n'.."!stats 20150528: Returns this day stats"..'\n'.."!stats all: Returns All days stats"..'\n'.."!stats 20150528 "..SHOW_LIMIT_NUM..": Returns a list only top "..SHOW_LIMIT_NUM..'\n',
+  usage = usage_txt,
   patterns = {
     "^!([Ss]tats1)$",
     "^!([Ss]tats1) (.+)$",
