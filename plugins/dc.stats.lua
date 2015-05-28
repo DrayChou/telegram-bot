@@ -8,16 +8,20 @@ local TIME_CHECK = 4 -- seconds
 local DEFAULT_SHOW_LIMIT = 25 -- 显示的最多条数
 
 local function user_print_name(user)
+    local text = ''
     if user.print_name then
-        return user.print_name
+        text = user.print_name
+    else
+        if user.first_name then
+            text = user.last_name..' '
+        end
+        if user.lastname then
+            text = text..user.last_name
+        end
     end
     
-    local text = ''
-    if user.first_name then
-        text = user.last_name..' '
-    end
-    if user.lastname then
-        text = text..user.last_name
+    if user.username then
+        text = text..' @'..user.username
     end
     
     return text
