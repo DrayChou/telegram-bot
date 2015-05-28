@@ -161,15 +161,15 @@ local function run(msg, matches)
         if msg.to.type == 'chat' then
             -- 解析第二个参数
             local day_id = os.date("%Y%m%d")
---            if matches[2] then
---                day_id = matches[2]:upper()
---            end
+            if matches[2] then
+                day_id = matches[2]:upper()
+            end
             
             -- 解析查询的数量
             local limit = DEFAULT_SHOW_LIMIT
---            if matches[3] then
---                limit = tonumber(matches[3])
---            end
+            if matches[3] then
+                limit = tonumber(matches[3])
+            end
             
             return get_msg_num_stats(msg, day_id, limit)
         elseif is_sudo(msg) then
