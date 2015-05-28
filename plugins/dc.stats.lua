@@ -157,7 +157,7 @@ local function get_bot_stats()
 end
 
 local function run(msg, matches)
-    if matches[1]:lower() == "stats1" then
+    if matches[1]:lower() == "stats" then
         if msg.to.type == 'chat' then
             -- 解析第二个参数
             local day_id = os.date("%Y%m%d")
@@ -189,9 +189,9 @@ return {
         "!stats 20150528 "..DEFAULT_SHOW_LIMIT..": Returns a list only top "..DEFAULT_SHOW_LIMIT
     },
     patterns = {
-        "^!([Ss]tats1)$",
-        "^!([Ss]tats1) ([%w]+)$",
-        "^!([Ss]tats1) ([%w]+) ([%w]+)$"
+        "^!([Ss]tats)$",
+        "^!([Ss]tats) ([%w]+)$",
+        "^!([Ss]tats) ([%w]+) ([%w]+)$"
     },
     run = run,
     pre_process = pre_process
