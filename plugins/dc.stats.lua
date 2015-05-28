@@ -147,15 +147,17 @@ local function get_bot_stats()
     return count]]
     
     -- Users
-    local hash = 'msgs:*:'..our_id
+    local hash = 'msgs:*:*'
     local r = redis:eval(redis_scan, 1, hash)
     local text = 'Users: '..r
     
+    -- 群
     hash = 'chat:*:users'
     r = redis:eval(redis_scan, 1, hash)
     text = text..'\nChats: '..r
     
-    hash = 'chat:*:users:*'
+    -- 每日的
+    hash = 'msgs:*:*:*'
     r = redis:eval(redis_scan, 1, hash)
     text = text..'\nChatsDays: '..r
     
