@@ -112,8 +112,8 @@ local function pre_process(msg)
   redis:incr(hash)
 
   -- Total user today msgs
-  local hash = 'msgs:'..msg.from.id..':'..msg.to.id..':'..os.date("%Y%m%d")
-  redis:incr(hash)
+  local hash_day = 'msgs:'..msg.from.id..':'..msg.to.id..':'..os.date("%Y%m%d")
+  redis:incr(hash_day)
 
   -- Check flood
   if msg.from.type == 'user' then
@@ -149,6 +149,10 @@ local function get_bot_stats()
   hash = 'chat:*:users'
   r = redis:eval(redis_scan, 1, hash)
   text = text..'\nChats: '..r
+
+  hash = 'chat:*:users:*'
+  r = redis:eval(redis_scan, 1, hash)
+  text = text..'\nChatsDays: '..r
 
   return text
 
