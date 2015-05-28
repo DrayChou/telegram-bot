@@ -1,11 +1,11 @@
--- 统计每天的发言数量
--- 调用方法为 !daystats !ds
+-- Saves the number of messages from a user
+-- Can check the number of messages with !stats
 
 do
 
 local NUM_MSG_MAX = 5
 local TIME_CHECK = 4 -- seconds
-local SHOW_LIMIT_NUM = 25 -- 显示的最多条数
+local DEFAULT_SHOW_LIMIT = 25 -- 显示的最多条数
 
 local function user_print_name(user)
   if user.print_name then
@@ -23,18 +23,25 @@ local function user_print_name(user)
   return text
 end
 
--- Returns a table with `name` and `msgs`
-local function get_msgs_user_chat(user_id, chat_id)
+-- Returns a table with `name` and `msgs` and `msgs_day`
+local function get_msgs_user_chat(user_id, chat_id, day_id)
   local user_info = {}
   local uhash = 'user:'..user_id
   local user = redis:hgetall(uhash)
-  local um_hash = 'msgs:'..user_id..':'..chat_id..':'..os.date("%Y%m%d")
-  user_info.msgs = tonumber(redis:get(um_hash) or 0)
+
+  if day_id:upper() == 'ALL' then
+    local um_hash = 'msgs:'..user_id..':'..chat_id
+  else
+    local um_hash = 'msgs:'..user_id..':'..chat_id..':'..day_id
+  end
+
   user_info.name = user_print_name(user)..' ('..user_id..')'
+  user_info.msgs = tonumber(redis:get(um_hash) or 0)
+
   return user_info
 end
 
-local function get_msg_num_stats(msg)
+local function get_msg_num_stats(msg, day_id, limit)
   if msg.to.type == 'chat' then
     local chat_id = msg.to.id
     -- Users on chat
@@ -45,7 +52,7 @@ local function get_msg_num_stats(msg)
     -- Get user info
     for i = 1, #users do
       local user_id = users[i]
-      local user_info = get_msgs_user_chat(user_id, chat_id)
+      local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
       table.insert(users_info, user_info)
     end
 
@@ -61,14 +68,14 @@ local function get_msg_num_stats(msg)
     for k,user in pairs(users_info) do
         -- 加前缀
         if log_num == 0 then
-            text = text..'TODAY TOP '..SHOW_LIMIT_NUM..'\n'
+          text = text..day_id:upper()..' TOP '..limit..'\n'
         end
 
         log_num = log_num + 1
         text = text..user.name..' => '..user.msgs..'\n'
 
         -- 如果超过50个了，不再输出
-        if log_num >= SHOW_LIMIT_NUM then
+        if log_num >= limit then
             break
         end
     end
@@ -101,6 +108,10 @@ local function pre_process(msg)
   end
 
   -- Total user msgs
+  local hash = 'msgs:'..msg.from.id..':'..msg.to.id
+  redis:incr(hash)
+
+  -- Total user today msgs
   local hash = 'msgs:'..msg.from.id..':'..msg.to.id..':'..os.date("%Y%m%d")
   redis:incr(hash)
 
@@ -144,9 +155,21 @@ local function get_bot_stats()
 end
 
 local function run(msg, matches)
-  if matches[1]:lower() == "ds" or matches[1]:lower() == "daystats" then
+  if matches[1]:lower() == "stats" then
     if msg.to.type == 'chat' then
-      return get_msg_num_stats(msg)
+      -- 解析第二个参数
+      local day = os.date("%Y%m%d")
+      if matches[2] then
+          day = matches[2]
+      end
+
+      -- 解析查询的数量
+      local limit = SHOW_LIMIT_NUM
+      if matches[3] then
+          limit = matches[3]
+      end
+
+      return get_msg_num_stats(msg, day, limit)
     elseif is_sudo(msg) then
       return get_bot_stats()
     else
@@ -156,15 +179,18 @@ local function run(msg, matches)
 end
 
 return {
-  description = "记录用户每日发送信息数的插件.",
-  usage = "!ds,!daystats: Returns a list of Username [telegram_id]: msg_num",
+  description = "Plugin to update user stats.",
+  usage = "!stats: Returns a list of Username [telegram_id]: msg_num only top"..SHOW_LIMIT_NUM..'\n',
+  usage = usage.."!stats 20150528: Returns this day stats"..'\n',
+  usage = usage.."!stats all: Returns All days stats"..'\n',
+  usage = usage.."!stats 20150528 "..SHOW_LIMIT_NUM..": Returns a list only top "..SHOW_LIMIT_NUM..'\n',
   patterns = {
-    "^!([Dd]aystats)$",
-    "^!([Dd]s)$"
+    "^!([Ss]tats1)$",
+    "^!([Ss]tats1) (.*)$",
+    "^!([Ss]tats1) (.*) (.*)$"
     },
   run = run,
   pre_process = pre_process
 }
 
 end
-
