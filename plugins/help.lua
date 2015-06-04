@@ -26,7 +26,7 @@ local function plugin_help(name)
 end
 
 -- !help command
-local function telegram_help()
+local function telegram_help(msg)
     local text = "Plugin list: \n\n"
     -- Plugins names
     for name in pairs(plugins) do
@@ -41,7 +41,7 @@ local function telegram_help()
 end
 
 -- !help all command
-local function help_all()
+local function help_all(msg)
     local ret = ""
     for name in pairs(plugins) do
         ret = ret .. plugin_help(name)
