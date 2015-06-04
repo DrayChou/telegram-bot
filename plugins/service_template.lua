@@ -265,10 +265,19 @@ return {
 ]]
 
 local function run(msg, matches)
+    print("msg: ")
     dump(msg)
+    
+    print("chat_info: ")
     dump(chat_info(msg.to.id))
     
-    send_msg(msg.from.print_name, 'pong', ok_cb, false)
+    print("vardump msg: ")
+    vardump(msg)
+    
+    print("vardump chat_info: ")
+    vardump(chat_info(msg.to.id))
+    
+    -- send_msg(msg.from.print_name, 'pong', ok_cb, false)
     
     -- avoid this plugins to process user messages
     if not msg.realservice then
