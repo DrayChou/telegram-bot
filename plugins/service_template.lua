@@ -1,17 +1,3 @@
-local function run(msg, matches)
-    dump(msg)
-    dump(chat_info(msg.to.id))
-    
-    send_msg(msg.from.print_name, 'pong', ok_cb, false)
-    
-    -- avoid this plugins to process user messages
-    if not msg.realservice then
-        -- return "Are you trying to troll me?"
-        return nil
-    end
-    print("Service message received: " .. matches[1])
-end
-
 --[[ DataDumper.lua
 Copyright (c) 2007 Olivetti-Engineering SA
 
@@ -247,11 +233,57 @@ function dump(...)
     print(DataDumper(...), "\n---")
 end
 
+--[[
+return {
+  date=1433394474,
+  flags=16,
+  from={
+    access_hash=1,
+    first_name="Dray",
+    flags=528,
+    id=64163268,
+    last_name="🌞",
+    phone="16128881024",
+    print_name="Dray_🌞",
+    type="user" 
+  },
+  id="149683",
+  out=false,
+  service=false,
+  text="!!tgservice 123",
+  to={
+    first_name="Bot",
+    flags=144,
+    id=109098660,
+    last_name="DC",
+    phone="13134829895",
+    print_name="Bot_DC",
+    type="user" 
+  },
+  unread=true 
+}
+]]
+
+local function run(msg, matches)
+    dump(msg)
+    dump(chat_info(msg.to.id))
+    
+    send_msg(msg.from.print_name, 'pong', ok_cb, false)
+    
+    -- avoid this plugins to process user messages
+    if not msg.realservice then
+        -- return "Are you trying to troll me?"
+        return nil
+    end
+    print("Service message received: " .. matches[1])
+end
+
 return {
     description = "Template for service plugins",
     usage = "",
     patterns = {
-        "^!!tgservice (.*)$" -- Do not use the (.*) match in your service plugin
+        "^!!tgservice (.*)$", -- Do not use the (.*) match in your service plugin
+        "kick"
     },
     run = run
 }
