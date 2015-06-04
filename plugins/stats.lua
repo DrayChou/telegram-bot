@@ -38,6 +38,10 @@ local function get_msgs_user_chat(user_id, chat_id, day_id)
         um_hash = 'msgs:'..user_id..':'..chat_id
     end
     
+    if day_id == 'TODAY' or day_id == 'TD' then
+        um_hash = 'msgs:'..user_id..':'..chat_id..':'..os.date("%Y%m%d")
+    end
+    
     user_info.name = user_print_name(user)..' ('..user_id..')'
     user_info.msgs = tonumber(redis:get(um_hash) or 0)
     return user_info
@@ -47,15 +51,26 @@ local function get_msg_num_stats(msg, day_id, limit)
     if msg.to.type == 'chat' then
         local chat_id = msg.to.id
         -- Users on chat
-        local hash = 'chat:'..chat_id..':users'
-        local users = redis:smembers(hash)
         local users_info = {}
         
+        -- local hash = 'chat:'..chat_id..':users'
+        -- local users = redis:smembers(hash)
         -- Get user info
-        for i = 1, #users do
-            local user_id = users[i]
-            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-            table.insert(users_info, user_info)
+        --        for i = 1, #users do
+        --            local user_id = users[i]
+        --            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+        --            table.insert(users_info, user_info)
+        --        end
+        
+        -- 从用户消息的受众那边拿到用户列表
+        local users = {}
+        for i = 1, #msg.to.members do
+            local user = msg.to.members[i]
+            if user.type == 'user' then
+                local user_id = user.id
+                local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+                table.insert(users_info, user_info)
+            end
         end
         
         -- 排序
