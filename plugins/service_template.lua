@@ -480,14 +480,62 @@ vardump chat_info:
 false
 ]]
 
+local function user_print_name(user)
+    local text = ''
+    if user.print_name then
+        text = user.print_name
+    else
+        if user.first_name then
+            text = user.last_name..' '
+        end
+        if user.lastname then
+            text = text..user.last_name
+        end
+    end
+    
+    if user.username then
+        text = text..' @'..user.username
+    end
+    
+    return text
+end
+
+-- Returns a table with `name` and `msgs` and `msgs_day`
+local function get_msgs_user_chat(user_id, chat_id, day_id)
+    local user_info = {}
+    local uhash = 'user:'..user_id
+    local user = redis:hgetall(uhash)
+    
+    local um_hash = 'msgs:'..user_id..':'..chat_id..':'..day_id
+    if day_id == 'ALL' then
+        um_hash = 'msgs:'..user_id..':'..chat_id
+    end
+    
+    if day_id == 'TODAY' or day_id == 'TD' then
+        um_hash = 'msgs:'..user_id..':'..chat_id..':'..os.date("%Y%m%d")
+    end
+    
+    user_info.name = user_print_name(user)..' ('..user_id..')'
+    user_info.msgs = tonumber(redis:get(um_hash) or 0)
+    return user_info
+end
+
 local function run(msg, matches)
-    print("vardump msg: ")
-    vardump(msg)
+    local chat_id = '17071158'
+    local day_id = 'ALL'
     
-    print("vardump chat_info: ")
-    vardump(chat_info(msg.to.id))
+    -- 从用户消息的受众那边拿到用户列表
+    local users = {}
+    for i = 1, #msg.to.members do
+        local user = msg.to.members[i]
+        if user.type == 'user' then
+            local user_id = user.id
+            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+            table.insert(users, user_info)
+        end
+    end
     
-    -- send_msg(msg.from.print_name, 'pong', ok_cb, false)
+    vardump(users)
     
     -- avoid this plugins to process user messages
     if not msg.realservice then
@@ -502,7 +550,6 @@ return {
     usage = "",
     patterns = {
         "^!!tgservice (.*)$", -- Do not use the (.*) match in your service plugin
-        "kick"
     },
     run = run
 }
