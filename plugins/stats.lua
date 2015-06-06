@@ -53,25 +53,23 @@ local function get_msg_num_stats(msg, day_id, limit)
         -- Users on chat
         local users_info = {}
         
-        local hash = 'chat:'..chat_id..':users'
-        local users = redis:smembers(hash)
-        -- Get user info
-        for i = 1, #users do
-            local user_id = users[i]
-            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-            table.insert(users_info, user_info)
-        end
+        --        local hash = 'chat:'..chat_id..':users'
+        --        local users = redis:smembers(hash)
+        --        -- Get user info
+        --        for i = 1, #users do
+        --            local user_id = users[i]
+        --            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+        --            table.insert(users_info, user_info)
+        --        end
         
         -- 从用户消息的受众那边拿到用户列表
-        --        local users = {}
-        --        for i = 1, #msg.to.members do
-        --            local user = msg.to.members[i]
-        --            if user.type == 'user' then
-        --                local user_id = user.id
-        --                local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-        --                table.insert(users_info, user_info)
-        --            end
-        --        end
+        for i,user in pairs(msg.to.members) do
+            if user.type == 'user' then
+                local user_id = user.id
+                local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+                table.insert(users_info, user_info)
+            end
+        end
         
         -- 排序
         local order_by = 1
