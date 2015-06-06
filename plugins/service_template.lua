@@ -526,8 +526,8 @@ local function run(msg, matches)
     
     -- 从用户消息的受众那边拿到用户列表
     local users = {}
-    for i = 1, #msg.to.members do
-        local user = msg.to.members[i]
+    --    for i = 1, #msg.to.members do
+    for i,user in pairs(msg.to.members) do
         if user.type == 'user' then
             local user_id = user.id
             local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
