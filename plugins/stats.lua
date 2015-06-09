@@ -42,7 +42,7 @@ local function get_msgs_user_chat(user_id, chat_id, day_id)
         um_hash = 'msgs:'..user_id..':'..chat_id..':'..os.date("%Y%m%d")
     end
     
-    user_info.user_id = user_id
+    user_info.id = user_id
     user_info.name = user_print_name(user)..' ('..user_id..')'
     user_info.msgs = tonumber(redis:get(um_hash) or 0)
     return user_info
@@ -138,8 +138,8 @@ local function get_user_msg_num_stats(msg, user_id)
     for k,user in pairs(all_users_info) do
         all_sum = all_sum + tonumber(user.msgs)
         
-        if user.user_id == user_id then
-            user_all_num = user.msgs
+        if user.id == user_id then
+            user_all_num = tonumber(user.msgs)
         end
     end
     
@@ -149,8 +149,8 @@ local function get_user_msg_num_stats(msg, user_id)
     for k,user in pairs(day_users_info) do
         day_sum = day_sum + tonumber(user.msgs)
         
-        if user.user_id == user_id then
-            user_day_num = user.msgs
+        if user.id == user_id then
+            user_day_num = tonumber(user.msgs)
         end
     end
     
