@@ -48,6 +48,35 @@ local function get_msgs_user_chat(user_id, chat_id, day_id)
     return user_info
 end
 
+
+-- 得到用户的信息列表
+local function get_users(msg, day_id)
+    local chat_id = msg.to.id
+    
+    local users_info = {}
+    -- 从用户消息的受众那边拿到用户列表
+    if msg.to.members then
+        for i,user in pairs(msg.to.members) do
+            if user.type == 'user' then
+                local user_id = user.id
+                local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+                table.insert(users_info, user_info)
+            end
+        end
+    else
+        local hash = 'chat:'..chat_id..':users'
+        local users = redis:smembers(hash)
+        --        -- Get user info
+        for i = 1, #users do
+            local user_id = users[i]
+            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+            table.insert(users_info, user_info)
+        end
+    end
+    
+    return users_info
+end
+
 local function get_msg_num_stats(msg, day_id, limit)
     if msg.to.type == 'chat' then
         -- Users on chat
@@ -96,34 +125,6 @@ local function get_msg_num_stats(msg, day_id, limit)
         text = text..'TOP/ALL: '..((top_sum/sum)*100)..'%\n'
         return text
     end
-end
-
--- 得到用户的信息列表
-local function get_users(msg, day_id)
-    local chat_id = msg.to.id
-    
-    local users_info = {}
-    -- 从用户消息的受众那边拿到用户列表
-    if msg.to.members then
-        for i,user in pairs(msg.to.members) do
-            if user.type == 'user' then
-                local user_id = user.id
-                local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-                table.insert(users_info, user_info)
-            end
-        end
-    else
-        local hash = 'chat:'..chat_id..':users'
-        local users = redis:smembers(hash)
-        --        -- Get user info
-        for i = 1, #users do
-            local user_id = users[i]
-            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-            table.insert(users_info, user_info)
-        end
-    end
-    
-    return users_info
 end
 
 -- 加载用户聊天信息
