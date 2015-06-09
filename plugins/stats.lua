@@ -120,9 +120,9 @@ local function get_msg_num_stats(msg, day_id, limit)
         end
         
         -- 统计
-        text = text..'TOP SUM: '..top_sum..'\n'
-        text = text..'ALL SUM: '..sum..'\n'
-        text = text..'TOP/ALL: '..((top_sum/sum)*100)..'%\n'
+        text = text..'top sum: '..top_sum..'\n'
+        text = text..'all sum: '..sum..'\n'
+        text = text..'top/all: '..((top_sum/sum)*100)..'%\n'
         return text
     end
 end
@@ -155,14 +155,15 @@ local function get_user_msg_num_stats(msg, user_id)
         end
     end
     
+    local user = redis:hgetall(uhash)
     -- 统计
-    local text = ''
-    text = text..'USER COUNT: '..user_all_num..'\n'
-    text = text..'ALL USER SUM: '..all_sum..'\n'
-    text = text..'USER/ALL: '..((user_all_num/all_sum)*100)..'\n'
-    text = text..'USER TODAY COUNT: '..user_day_num..'\n'
-    text = text..'ALL USER TODAY SUM: '..day_sum..'\n'
-    text = text..'USER/ALL: '..((user_day_num/day_sum)*100)..'\n'
+    local text = user.name..' state:\n'
+    text = text..'stats count: '..user_all_num..'\n'
+    text = text..'all user sum: '..all_sum..'\n'
+    text = text..'user/all: '..((user_all_num/all_sum)*100)..'%\n'
+    text = text..'user today count: '..user_day_num..'\n'
+    text = text..'all user today sum: '..day_sum..'\n'
+    text = text..'user/all: '..((user_day_num/day_sum)*100)..'%\n'
     return text
 end
 
@@ -287,7 +288,7 @@ return {
         "^!([Ss]tats)$",
         "^!([Ss]tats) ([%w]+)$",
         "^!([Ss]tats) ([%w]+) ([-|%w]+)$",
-        "^!([Ss]tat) ([%w]+)$"-- 读取用户的信息
+        "^!([Ss]tate) ([%w]+)$"-- 读取用户的信息
     },
     run = run,
     pre_process = pre_process
