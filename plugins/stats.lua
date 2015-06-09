@@ -158,7 +158,8 @@ local function get_user_msg_num_stats(msg, user_id)
     local uhash = 'user:'..user_id
     local user = redis:hgetall(uhash)
     -- 统计
-    local text = user.name..' state:\n'
+    local text = ''
+    text = text..user.name..' state:\n'
     text = text..'stats count: '..user_all_num..'\n'
     text = text..'all user sum: '..all_sum..'\n'
     text = text..'user/all: '..((user_all_num/all_sum)*100)..'%\n'
