@@ -42,7 +42,7 @@ local function get_msgs_user_chat(user_id, chat_id, day_id)
         um_hash = 'msgs:'..user_id..':'..chat_id..':'..os.date("%Y%m%d")
     end
     
-    user_info.id = user_id
+    user_info.id = tonumber(user_id)
     user_info.name = user_print_name(user)..' ('..user_id..')'
     user_info.msgs = tonumber(redis:get(um_hash) or 0)
     return user_info
@@ -131,6 +131,7 @@ end
 local function get_user_msg_num_stats(msg, user_id)
     local all_users_info = get_users(msg, 'ALL')
     local day_users_info = get_users(msg, os.date("%Y%m%d"))
+    user_id = tonumber(user_id)
     
     -- 统计用户和所有用户所有发言的计数
     local user_all_num = 0
