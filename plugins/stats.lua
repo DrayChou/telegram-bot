@@ -272,7 +272,7 @@ local function run(msg, matches)
         end
     end
     
-    if matches[1]:lower() == "stat" then
+    if matches[1]:lower() == "state" then
         local user_id = tonumber(matches[2])
         return get_user_msg_num_stats(msg, user_id)
     end
@@ -285,13 +285,13 @@ return {
         "!stats 20150528: Returns this day stats",
         "!stats all: Returns All days stats",
         "!stats 20150528 "..DEFAULT_SHOW_LIMIT..": Returns a list only top "..DEFAULT_SHOW_LIMIT,
-        "!st user_id: Returns this user All days stats"
+        "!state user_id: Returns this user All days stats"
     },
     patterns = {
         "^!([Ss]tats)$",
         "^!([Ss]tats) ([%w]+)$",
         "^!([Ss]tats) ([%w]+) ([-|%w]+)$",
-        "^!([Ss]t) ([%w]+)$"-- 读取用户的信息
+        "^!([Ss]tate) ([%w]+)$"-- 读取用户的信息
     },
     run = run,
     pre_process = pre_process
