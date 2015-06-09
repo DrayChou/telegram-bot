@@ -42,6 +42,7 @@ local function get_msgs_user_chat(user_id, chat_id, day_id)
         um_hash = 'msgs:'..user_id..':'..chat_id..':'..os.date("%Y%m%d")
     end
     
+    user_info.id = user_id
     user_info.name = user_print_name(user)..' ('..user_id..')'
     user_info.msgs = tonumber(redis:get(um_hash) or 0)
     return user_info
@@ -49,27 +50,8 @@ end
 
 local function get_msg_num_stats(msg, day_id, limit)
     if msg.to.type == 'chat' then
-        local chat_id = msg.to.id
         -- Users on chat
-        local users_info = {}
-        
-        --        local hash = 'chat:'..chat_id..':users'
-        --        local users = redis:smembers(hash)
-        --        -- Get user info
-        --        for i = 1, #users do
-        --            local user_id = users[i]
-        --            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-        --            table.insert(users_info, user_info)
-        --        end
-        
-        -- 从用户消息的受众那边拿到用户列表
-        for i,user in pairs(msg.to.members) do
-            if user.type == 'user' then
-                local user_id = user.id
-                local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-                table.insert(users_info, user_info)
-            end
-        end
+        local users_info = get_users(msg, day_id)
         
         -- 排序
         local order_by = 1
@@ -110,10 +92,76 @@ local function get_msg_num_stats(msg, day_id, limit)
         
         -- 统计
         text = text..'TOP SUM: '..top_sum..'\n'
-        text = text..'ALl SUM: '..sum..'\n'
+        text = text..'ALL SUM: '..sum..'\n'
         text = text..'TOP/ALL: '..((top_sum/sum)*100)..'%\n'
         return text
     end
+end
+
+-- 得到用户的信息列表
+local function get_users(msg, day_id)
+    local chat_id = msg.to.id
+    
+    local users_info = {}
+    -- 从用户消息的受众那边拿到用户列表
+    if msg.to.members then
+        for i,user in pairs(msg.to.members) do
+            if user.type == 'user' then
+                local user_id = user.id
+                local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+                table.insert(users_info, user_info)
+            end
+        end
+    else
+        local hash = 'chat:'..chat_id..':users'
+        local users = redis:smembers(hash)
+        --        -- Get user info
+        for i = 1, #users do
+            local user_id = users[i]
+            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+            table.insert(users_info, user_info)
+        end
+    end
+    
+    return users_info
+end
+
+-- 加载用户聊天信息
+local function get_user_msg_num_stats(msg, user_id)
+    local all_users_info = get_users(msg, 'all')
+    local day_users_info = get_users(msg, os.date("%Y%m%d"))
+    
+    -- 统计用户和所有用户所有发言的计数
+    local user_all_num = 0
+    local all_sum = 0
+    for k,user in pairs(all_users_info) do
+        all_sum = all_sum + tonumber(user.msgs)
+        
+        if user.user_id == user_id then
+            user_all_num = user.msgs
+        end
+    end
+    
+    -- 统计用户和所有用户今天发言的计数
+    local user_day_num = 0
+    local day_sum = 0
+    for k,user in pairs(day_users_info) do
+        day_sum = day_sum + tonumber(user.msgs)
+        
+        if user.user_id == user_id then
+            user_day_num = user.msgs
+        end
+    end
+    
+    -- 统计
+    local text = ''
+    text = text..'USER COUNT: '..user_all_num..'\n'
+    text = text..'ALL USER SUM: '..all_sum..'\n'
+    text = text..'USER/ALL: '..((user_all_num/all_sum)*100)..'\n'
+    text = text..'USER TODAY COUNT: '..user_day_num..'\n'
+    text = text..'ALL USER TODAY SUM: '..day_sum..'\n'
+    text = text..'USER/ALL: '..((user_day_num/day_sum)*100)..'\n'
+    return text
 end
 
 -- Save stats, ban user
@@ -217,6 +265,11 @@ local function run(msg, matches)
             return 'Stats works only on chats'
         end
     end
+    
+    if matches[1]:lower() == "stat" then
+        local user_id = tonumber(matches[2])
+        return get_user_msg_num_stats(msg, user_id)
+    end
 end
 
 return {
@@ -225,12 +278,14 @@ return {
         "!stats: Returns a list of Username [telegram_id]: msg_num only top"..DEFAULT_SHOW_LIMIT,
         "!stats 20150528: Returns this day stats",
         "!stats all: Returns All days stats",
-        "!stats 20150528 "..DEFAULT_SHOW_LIMIT..": Returns a list only top "..DEFAULT_SHOW_LIMIT
+        "!stats 20150528 "..DEFAULT_SHOW_LIMIT..": Returns a list only top "..DEFAULT_SHOW_LIMIT,
+        "!stat user_id: Returns this user All days stats"
     },
     patterns = {
         "^!([Ss]tats)$",
         "^!([Ss]tats) ([%w]+)$",
-        "^!([Ss]tats) ([%w]+) ([-|%w]+)$"
+        "^!([Ss]tats) ([%w]+) ([-|%w]+)$",
+        "^!([Ss]tat) ([%w]+)$"-- 读取用户的信息
     },
     run = run,
     pre_process = pre_process
