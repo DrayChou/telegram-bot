@@ -155,6 +155,7 @@ local function get_user_msg_num_stats(msg, user_id)
         end
     end
     
+    local uhash = 'user:'..user_id
     local user = redis:hgetall(uhash)
     -- 统计
     local text = user.name..' state:\n'
@@ -282,7 +283,7 @@ return {
         "!stats 20150528: Returns this day stats",
         "!stats all: Returns All days stats",
         "!stats 20150528 "..DEFAULT_SHOW_LIMIT..": Returns a list only top "..DEFAULT_SHOW_LIMIT,
-        "!stat user_id: Returns this user All days stats"
+        "!state user_id: Returns this user All days stats"
     },
     patterns = {
         "^!([Ss]tats)$",
