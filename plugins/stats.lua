@@ -129,11 +129,19 @@ end
 
 -- 加载用户聊天信息
 local function get_user_msg_num_stats(msg, user_id)
-    local all_users_info = get_users(msg, 'ALL')
-    local day_users_info = get_users(msg, os.date("%Y%m%d"))
-    user_id = tonumber(user_id)
+    
+    local user_name = nil
+    local n = tonumber(user_id)
+    if n then
+        user_name = "user#id"..user_id
+    else
+        user_name = user_id
+    end
+    
+    local user = user_info(user_name)
     
     -- 统计用户和所有用户所有发言的计数
+    local all_users_info = get_users(msg, 'ALL')
     local user_all_num = 0
     local all_sum = 0
     for k,user in pairs(all_users_info) do
@@ -145,6 +153,7 @@ local function get_user_msg_num_stats(msg, user_id)
     end
     
     -- 统计用户和所有用户今天发言的计数
+    local day_users_info = get_users(msg, os.date("%Y%m%d"))
     local user_day_num = 0
     local day_sum = 0
     for k,user in pairs(day_users_info) do
@@ -273,8 +282,7 @@ local function run(msg, matches)
     end
     
     if matches[1]:lower() == "state" then
-        local user_id = tonumber(matches[2])
-        return get_user_msg_num_stats(msg, user_id)
+        return get_user_msg_num_stats(msg, matches[2])
     end
 end
 
