@@ -44,6 +44,10 @@ local function getTuling(user_id,info)
             text = text.."\n 详情:".." "..new.info
             text = text.."\n".." "..new.detailurl
             text = text.."\n".." "..new.icon
+            
+            if k >= 3 then
+                break;
+            end
         end
     end
     
