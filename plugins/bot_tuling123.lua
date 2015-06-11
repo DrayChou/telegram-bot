@@ -61,7 +61,7 @@ local function getTuling(user_id,info)
     end
     
     -- 如果是航班
-    if data.code == 305000 then
+    if data.code == 306000 then
         for k,new in pairs(data.list) do
             text = text.."\n 航班:".." "..new.flight
             text = text.."\n 航班路线:".." "..new.route
