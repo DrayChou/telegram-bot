@@ -24,7 +24,7 @@ local function getTuling(user_id,info)
 end
 
 local function run(msg, matches)
-    return getTuling(msg.from.id,matches[2])
+    return getTuling(msg.from.id,matches[1])
 end
 
 return {
