@@ -19,16 +19,18 @@ local function getTuling(user_id,info)
 end
 
 local function run(msg, matches)
-    return getTuling(msg.from.id,matches[1])
+    if matches[1]:lower() == "bot" then
+        return getTuling(msg.from.id,matches[2])
+    end
 end
 
 return {
     description = "询问小机器人", 
     usage = {
-        "bot info: 请求图灵的机器人接口，并返回回答",
+        "!bot info: 请求图灵的机器人接口，并返回回答",
     },
     patterns = {
-        "^bot (w+)$",
+        "^!([Bb]ot) ([%w]+)$",
     }, 
     run = run 
 }
