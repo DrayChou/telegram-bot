@@ -11,7 +11,11 @@ local function getTuling(user_id,info)
     url=url.."&info="..info
     url=url.."&userid="..user_id
     
+    vardump(url)
+    
     local res,status = http.request(url)
+    
+    vardump(res)
     
     if status ~= 200 then return nil end
     local data = json:decode(res)
