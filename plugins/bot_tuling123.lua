@@ -3,7 +3,7 @@ do
 local tuling_config = load_from_file('data/tuling.lua')
 -- 图灵机器人的KEY
 local tuling_url = "http://www.tuling123.com/openapi/api"
-local consumer_key = tuling_config.consumer_key;
+local consumer_key = tuling_config.consumer_key
 
 local function getTuling(user_id,info)
     local url = tuling_url.."&key="..consumer_key
