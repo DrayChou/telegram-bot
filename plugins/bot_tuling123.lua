@@ -34,6 +34,10 @@ local function getTuling(user_id,info)
             text = text.."\n 来源:".." "..new.source
             text = text.."\n".." "..new.detailurl
             text = text.."\n".." "..new.icon
+            
+            if k >= 3 then
+                break;
+            end
         end
     end
     
@@ -61,6 +65,10 @@ local function getTuling(user_id,info)
             text = text.."\n 到达时间:".." "..new.endtime
             text = text.."\n".." "..new.detailurl
             text = text.."\n".." "..new.icon
+            
+            if k >= 3 then
+                break;
+            end
         end
     end
     
@@ -74,6 +82,10 @@ local function getTuling(user_id,info)
             text = text.."\n 航班状态:".." "..new.state
             text = text.."\n".." "..new.detailurl
             text = text.."\n".." "..new.icon
+            
+            if k >= 3 then
+                break;
+            end
         end
     end
     
