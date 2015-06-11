@@ -7,7 +7,7 @@ local tuling_url = "http://www.tuling123.com/openapi/api"
 local consumer_key = tuling_config.consumer_key
 
 local function getTuling(user_id,info)
-    local url = tuling_url.."?key="..consumer_key
+    local url = tuling_url.."&key="..consumer_key
     url=url.."&info="..info
     url=url.."&userid="..user_id
     
@@ -32,10 +32,10 @@ end
 return {
     description = "询问图灵小机器人", 
     usage = {
-        "!bot info: 请求图灵的机器人接口，并返回回答",
+        "!bot info: 请求图灵的机器人接口，并返回回答"
     },
     patterns = {
-        "^!([Bb]ot) ([%w]+)$",
+        "^!([Bb]ot) ([%w]+)$"
     }, 
     run = run 
 }
