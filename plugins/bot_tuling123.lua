@@ -1,6 +1,9 @@
 do
 
 local tuling_config = load_from_file('data/tuling.lua')
+
+vardump(tuling_config)
+
 -- 图灵机器人的KEY
 local tuling_url = "http://www.tuling123.com/openapi/api"
 local consumer_key = tuling_config.consumer_key
@@ -10,7 +13,11 @@ local function getTuling(user_id,info)
     url=url.."&info="..info
     url=url.."&userid="..user_id
     
+    vardump(url)
+    
     local res,status = http.request(url)
+    
+    vardump(res)
     
     if status ~= 200 then return nil end
     local data = json:decode(res)
@@ -25,7 +32,7 @@ local function run(msg, matches)
 end
 
 return {
-    description = "询问小机器人", 
+    description = "询问图灵小机器人", 
     usage = {
         "!bot info: 请求图灵的机器人接口，并返回回答",
     },
