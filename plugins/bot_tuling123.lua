@@ -99,7 +99,11 @@ end
 return {
     description = "询问图灵小机器人", 
     usage = {
-        "!bot info: 请求图灵的机器人接口，并返回回答"
+        "!bot info: 请求图灵的机器人接口，并返回回答。",
+        "Request Turing robot, and return the results. Only support Chinese.",
+        "升级链接|Upgrade link:http://www.tuling123.com/openapi/record.do?channel=98150",
+        "图灵机器人注册邀请地址，每有一个用户通过此地址注册账号，增加本接口可调用次数 1000次/天。",
+        "Turing robot registration invitation address, each user has a registered account through this address, increase the number of calls this interface can be 1000 times / day. Translation from Google!"
     },
     patterns = {
         "^![Bb]ot (.*)$"
