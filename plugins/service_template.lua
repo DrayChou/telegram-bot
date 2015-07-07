@@ -93,19 +93,19 @@ local function run(msg, matches)
     vardump(user_info("@vickyatmes"))
     vardump(user_info("+8618651049664"))
     
-    -- avoid this plugins to process user messages
-    if not msg.realservice then
-        -- return "Are you trying to troll me?"
-        return nil
-    end
-    print("Service message received: " .. matches[1])
+   -- avoid this plugins to process user messages
+   if not msg.realservice then
+      -- return "Are you trying to troll me?"
+      return nil
+   end
+   print("Service message received: " .. matches[1])
 end
 
 return {
-    description = "Template for service plugins",
-    usage = "",
-    patterns = {
-        "^!!tgservice (.*)$" -- Do not use the (.*) match in your service plugin
-    },
-    run = run
+   description = "Template for service plugins",
+   usage = "",
+   patterns = {
+      "^!!tgservice (.*)$" -- Do not use the (.*) match in your service plugin
+   },
+   run = run
 }
