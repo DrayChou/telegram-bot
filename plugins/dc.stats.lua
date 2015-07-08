@@ -386,6 +386,12 @@ local function run(msg, matches)
             
             -- 解析查询的数量
             local limit = DEFAULT_SHOW_LIMIT
+            
+            -- 默认总表单输出数据量为每日的一半
+            if day_id == 'ALL' then
+                limit = limit/2
+            end
+            
             if matches[3] then
                 limit = tonumber(matches[3])
             end
