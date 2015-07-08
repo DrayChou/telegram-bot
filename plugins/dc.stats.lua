@@ -238,6 +238,12 @@ end
 
 -- 加载用户聊天信息
 local function get_user_stats(msg, user_id)
+    if user_id == 'me' then
+        user_id = msg.from.id
+    else
+        user_id = tonumber(user_id)
+    end
+    
     -- 统计用户和所有用户所有发言的计数
     local all_users_info = get_users(msg, 'ALL')
     local user_all_num = 0
