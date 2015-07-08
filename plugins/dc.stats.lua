@@ -178,7 +178,7 @@ end
 ------------------------------------ 以上为功能函数
 
 -- 加载聊天室聊天状态
-local function get_msg_num_stats(msg, day_id, limit)
+local function get_char_stats(msg, day_id, limit)
     if msg.to.type == 'chat' then
         local chat_id = msg.to.id
         
@@ -228,18 +228,16 @@ local function get_msg_num_stats(msg, day_id, limit)
         text = text..'top sum: '..top_sum..'\n'
         text = text..'all sum: '..sum..'\n'
         text = text..'top/all: '..((top_sum/sum)*100)..'%\n'
-        text = text..'chat_id: '..chat_id..'\n'
-        text = text..'max day: '..max_day..'\n'
-        text = text..'max msgs: '..max_msgs..'\n'
-        text = text..'min day: '..min_day..'\n'
-        text = text..'min msgs: '..min_msgs..'\n'
+        --        text = text..'chat_id: '..chat_id..'\n'
+        text = text..'max day: '..max_day..' '..max_msgs..'\n'
+        text = text..'min day: '..min_day..' '..min_msgs..'\n'
         return text
     end
 end
 
 
 -- 加载用户聊天信息
-local function get_user_msg_num_stats(msg, user_id)
+local function get_user_stats(msg, user_id)
     -- 统计用户和所有用户所有发言的计数
     local all_users_info = get_users(msg, 'ALL')
     local user_all_num = 0
@@ -386,7 +384,7 @@ local function run(msg, matches)
                 limit = tonumber(matches[3])
             end
             
-            return get_msg_num_stats(msg, day_id, limit)
+            return get_char_stats(msg, day_id, limit)
         elseif is_sudo(msg) then
             return get_bot_stats()
         else
@@ -395,7 +393,7 @@ local function run(msg, matches)
     end
     
     if matches[1]:lower() == "state" then
-        return get_user_msg_num_stats(msg, matches[2])
+        return get_user_stats(msg, matches[2])
     end
 end
 
