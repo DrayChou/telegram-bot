@@ -5,7 +5,7 @@ do
 
 local NUM_MSG_MAX = 5
 local TIME_CHECK = 4 -- seconds
-local DEFAULT_SHOW_LIMIT = 25 -- 显示的最多条数
+local DEFAULT_SHOW_LIMIT = 10 -- 显示的最多条数
 
 local function user_print_name(user)
     local text = ''
@@ -26,6 +26,7 @@ local function user_print_name(user)
     
     return text
 end
+
 
 -- Returns a table with `name` and `msgs` and `msgs_day`
 local function get_msgs_user_chat(user_id, chat_id, day_id)
@@ -51,19 +52,20 @@ end
 
 -- 得到用户的信息列表
 local function get_users(msg, day_id)
-    local chat_id = msg.to.id
-    
-    local users_info = {}
-    -- 从用户消息的受众那边拿到用户列表
-    if msg.to.members then
-        for i,user in pairs(msg.to.members) do
-            if user.type == 'user' then
-                local user_id = user.id
-                local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-                table.insert(users_info, user_info)
-            end
-        end
-    else
+    if msg.to.type == 'chat' then
+        local chat_id = msg.to.id
+        
+        local users_info = {}
+        --        -- 从用户消息的受众那边拿到用户列表
+        --        if msg.to.members then
+        --            for i,user in pairs(msg.to.members) do
+        --                if user.type == 'user' then
+        --                    local user_id = user.id
+        --                    local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+        --                    table.insert(users_info, user_info)
+        --                end
+        --            end
+        --        else
         local hash = 'chat:'..chat_id..':users'
         local users = redis:smembers(hash)
         --        -- Get user info
@@ -72,13 +74,114 @@ local function get_users(msg, day_id)
             local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
             table.insert(users_info, user_info)
         end
+        --        end
+        
+        return users_info
     end
-    
-    return users_info
 end
 
+-- 重建群每日发言数数据
+local function rebuild_stats_data(search_chat_id, search_day_id)
+    
+    print('update chat day stats-> search_chat_id:'..search_chat_id..' day_id: '..search_day_id)
+    
+    -- 查询所有的天数的数据的统计资料，一般只执行一次
+    local hash = 'msgs:*:'..search_chat_id..':'..search_day_id
+    local res = redis:keys(hash)
+    
+    -- 拆开成数组的格式
+    local count = {}
+    for k, row in pairs(res) do
+        local keys = row:split(":")
+        local user_id = tonumber(keys[2] or 0)
+        local chat_id = tonumber(keys[3] or 0)
+        local day_id = tonumber(keys[4] or 0)
+        
+        if count[chat_id] == nil then
+            count[chat_id] = {}
+            count[chat_id][day_id] = 0
+        else
+            if count[chat_id][day_id] == nil then
+                count[chat_id][day_id] = 0
+            end
+        end
+        
+        count[chat_id][day_id] = count[chat_id][day_id] + tonumber(redis:get(row) or 0)
+    end
+    
+    -- 比较拿出每个讨论组里发言最多的一天
+    for c, days in pairs(count) do
+        local mxd = nil
+        local mxm = 0
+        local mid = nil
+        local mim = 99999999
+        
+        for d, n in pairs(days) do
+            if n > mxm then
+                mxd = d
+                mxm = n
+            end
+            
+            if n < mim then
+                mid = d
+                mim = n
+            end
+            
+            redis:set('stats:chat:'..c..':'..d, n)
+        end
+        
+        if search_day_id == '*' then
+            redis:set('stats:chat:'..c..':max_day', mxd)
+            redis:set('stats:chat:'..c..':min_day', mid)
+        else
+            local max_day = tonumber(redis:get('stats:chat:'..c..':max_day') or 0)
+            local min_day = tonumber(redis:get('stats:chat:'..c..':min_day') or 0)
+            local max_msgs = tonumber(redis:get('stats:chat:'..c..':'..max_day) or 0)
+            local min_msgs = tonumber(redis:get('stats:chat:'..c..':'..min_day) or 0)
+            
+            if mxm > max_msgs then
+                redis:set('stats:chat:'..c..':max_day', mxd)
+            end
+            
+            if mim < min_msgs then
+                redis:set('stats:chat:'..c..':min_day', mid)
+            end
+        end
+    end
+end
+
+
+-- 统计群最大最小的发言量
+local function get_chat_mx(chat_id)
+    
+    local max_msgs = 0
+    local min_msgs = 0
+    local max_day = tonumber(redis:get('stats:chat:'..chat_id..':max_day') or 0)
+    local min_day = tonumber(redis:get('stats:chat:'..chat_id..':min_day') or 0)
+    
+    if max_day == 0 or min_day == 0 then
+        
+        rebuild_stats_data('*', '*')
+        
+        max_day = tonumber(redis:get('stats:chat:'..chat_id..':max_day') or 0)
+        min_day = tonumber(redis:get('stats:chat:'..chat_id..':min_day') or 0)
+        
+    end
+    
+    max_msgs = redis:get('stats:chat:'..chat_id..':'..max_day)
+    min_msgs = redis:get('stats:chat:'..chat_id..':'..min_day)
+    
+    return max_day, max_msgs, min_day, min_msgs
+end
+
+
+------------------------------------ 以上为功能函数
+
+-- 加载聊天室聊天状态
 local function get_msg_num_stats(msg, day_id, limit)
     if msg.to.type == 'chat' then
+        local chat_id = msg.to.id
+        
         -- Users on chat
         local users_info = get_users(msg, day_id)
         
@@ -119,27 +222,24 @@ local function get_msg_num_stats(msg, day_id, limit)
             end
         end
         
+        local max_day, max_msgs, min_day, min_msgs = get_chat_mx(chat_id)
+        
         -- 统计
         text = text..'top sum: '..top_sum..'\n'
         text = text..'all sum: '..sum..'\n'
         text = text..'top/all: '..((top_sum/sum)*100)..'%\n'
+        text = text..'chat_id: '..chat_id..'\n'
+        text = text..'max day: '..max_day..'\n'
+        text = text..'max msgs: '..max_msgs..'\n'
+        text = text..'min day: '..min_day..'\n'
+        text = text..'min msgs: '..min_msgs..'\n'
         return text
     end
 end
 
+
 -- 加载用户聊天信息
 local function get_user_msg_num_stats(msg, user_id)
-    
-    local user_name = nil
-    local n = tonumber(user_id)
-    if n then
-        user_name = "user#id"..user_id
-    else
-        user_name = user_id
-    end
-    
-    local user = user_info(user_name)
-    
     -- 统计用户和所有用户所有发言的计数
     local all_users_info = get_users(msg, 'ALL')
     local user_all_num = 0
@@ -178,6 +278,7 @@ local function get_user_msg_num_stats(msg, user_id)
     text = text..'user/all: '..((user_day_num/day_sum)*100)..'%\n'
     return text
 end
+
 
 -- Save stats, ban user
 local function pre_process(msg)
@@ -224,9 +325,15 @@ local function pre_process(msg)
         redis:setex(hash, TIME_CHECK, msgs+1)
     end
     
+    -- 刷新重新统计这个群的每日最多和最少
+    if msg.to.type == 'chat' then
+        rebuild_stats_data(msg.to.id,os.date("%Y%m%d"))
+    end
+    
     return msg
 end
 
+-- 得到机器的状态
 local function get_bot_stats()
     
   local redis_scan = [[
@@ -254,9 +361,15 @@ local function get_bot_stats()
     r = redis:eval(redis_scan, 1, hash)
     text = text..'\nChatsDays: '..r
     
+    -- 有多少条发言数最大最小统计
+    hash = 'stats:chat:*:*'
+    r = redis:eval(redis_scan, 1, hash)
+    text = text..'\nStats:chat: '..r
+    
     return text
     
 end
+
 
 local function run(msg, matches)
     if matches[1]:lower() == "stats" then
@@ -285,6 +398,7 @@ local function run(msg, matches)
         return get_user_msg_num_stats(msg, matches[2])
     end
 end
+
 
 return {
     description = "Plugin to update user stats.",
