@@ -227,7 +227,7 @@ local function get_char_stats(msg, day_id, limit)
         -- 统计
         text = text..'top sum: '..top_sum..'\n'
         text = text..'all sum: '..sum..'\n'
-        text = text..'top/all: '..((top_sum/sum)*100)..'%\n'
+        text = text..'top/all: '..string.format("%6.2f", ((top_sum/sum)*100))..'%\n'
         --        text = text..'chat_id: '..chat_id..'\n'
         text = text..'max day: '..max_day..' => '..max_msgs..'\n'
         text = text..'min day: '..min_day..' => '..min_msgs..'\n'
@@ -276,10 +276,10 @@ local function get_user_stats(msg, user_id)
     text = text..user_print_name(user)..' state:\n'
     text = text..'stats count: '..user_all_num..'\n'
     text = text..'all user sum: '..all_sum..'\n'
-    text = text..'user/all: '..((user_all_num/all_sum)*100)..'%\n'
+    text = text..'user/all: '..string.format("%6.2f", ((user_all_num/all_sum)*100))..'%\n'
     text = text..'user today count: '..user_day_num..'\n'
     text = text..'all user today sum: '..day_sum..'\n'
-    text = text..'user/all: '..((user_day_num/day_sum)*100)..'%\n'
+    text = text..'user/all: '..string.format("%6.2f", ((user_day_num/day_sum)*100))..'%\n'
     return text
 end
 
