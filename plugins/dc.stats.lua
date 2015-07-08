@@ -229,8 +229,8 @@ local function get_char_stats(msg, day_id, limit)
         text = text..'all sum: '..sum..'\n'
         text = text..'top/all: '..((top_sum/sum)*100)..'%\n'
         --        text = text..'chat_id: '..chat_id..'\n'
-        text = text..'max day: '..max_day..' '..max_msgs..'\n'
-        text = text..'min day: '..min_day..' '..min_msgs..'\n'
+        text = text..'max day: '..max_day..' => '..max_msgs..'\n'
+        text = text..'min day: '..min_day..' => '..min_msgs..'\n'
         return text
     end
 end
