@@ -63,8 +63,8 @@ return {
   description = "Pokedex searcher for Telegram",
   usage = "!pokedex [Name/ID]: Search the pokédex for Name/ID and get info of the pokémon!",
   patterns = {
-    "^!pokedex (.*)$",
-    "^!pokemon (.+)$"
+    "^[!|#|/]pokedex (.*)$",
+    "^[!|#|/]pokemon (.+)$"
   },
   run = run
 }

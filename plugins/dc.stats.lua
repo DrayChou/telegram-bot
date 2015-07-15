@@ -420,10 +420,10 @@ return {
         "!state user_id: Returns this user All days stats"
     },
     patterns = {
-        "^!([Ss]tats)$",
-        "^!([Ss]tats) ([%w]+)$",
-        "^!([Ss]tats) ([%w]+) ([-|%w]+)$",
-        "^!([Ss]tate) ([%w]+)$"-- 读取用户的信息
+        "^[!|#|/]([Ss]tats)$",
+        "^[!|#|/]([Ss]tats) ([%w]+)$",
+        "^[!|#|/]([Ss]tats) ([%w]+) ([-|%w]+)$",
+        "^[!|#|/]([Ss]tate) ([%w]+)$"-- 读取用户的信息
     },
     run = run,
     pre_process = pre_process

@@ -85,8 +85,8 @@ return {
       "!recognise [url]"
    },
    patterns = {
-      "^!face (.*)$",
-      "^!recognise (.*)$"
+      "^[!|#|/]face (.*)$",
+      "^[!|#|/]recognise (.*)$"
    },
    run = run
 }

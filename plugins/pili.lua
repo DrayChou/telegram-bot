@@ -26,7 +26,7 @@ return {
       "!pili [url]: Shorten the URL"
    },
    patterns = {
-      "^!pili (https?://[%w-_%.%?%.:/%+=&]+)$"
+      "^[!|#|/]pili (https?://[%w-_%.%?%.:/%+=&]+)$"
    },
    run = run
 }

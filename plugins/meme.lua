@@ -185,12 +185,12 @@ return {
       '!meme [name] "[text_up]" "[text_down]": Generate a meme with the picture that match with that name with the texts provided.',
    },
    patterns = {
-      "^!meme (search) (.+)$",
+      "^[!|#|/]meme (search) (.+)$",
       '^!meme (list)$',
       '^!meme (listall)$',
       '^!meme (.+) "(.*)" "(.*)"$',
       '^!meme "(.+)" "(.*)" "(.*)"$',
-      "^!meme (.+) %- (.*) %- (.*)$"
+      "^[!|#|/]meme (.+) %- (.*) %- (.*)$"
    },
    run = run
 }

@@ -65,7 +65,7 @@ end
 return {
   description = "use gnuplot through telegram, only plot single variable function",
   usage = "!gnuplot [single variable function]",
-  patterns = {"^!gnuplot (.+)$"},
+  patterns = {"^[!|#|/]gnuplot (.+)$"},
   run = run
 }
 

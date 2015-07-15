@@ -18,7 +18,7 @@ return {
       "!dogify (your/words/with/slashes): Create a doge with the image and words"
    },
    patterns = {
-      "^!dogify (.+)$",
+      "^[!|#|/]dogify (.+)$",
    },
    run = run
 }

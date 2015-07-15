@@ -16,7 +16,7 @@ return {
   description = "Fortunes from Universidad Carlos III", 
   usage = "!uc3m",
   patterns = {
-    "^!uc3m$"
+    "^[!|#|/]uc3m$"
   }, 
   run = run 
 }

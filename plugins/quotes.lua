@@ -65,8 +65,8 @@ return {
         "!quote",
     },
     patterns = {
-        "^!addquote (.+)$",
-        "^!quote$",
+        "^[!|#|/]addquote (.+)$",
+        "^[!|#|/]quote$",
     },
     run = run
 }

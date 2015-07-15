@@ -49,7 +49,7 @@ return {
   description = "Search video on youtube and send it.",
   usage = "!youtube [term]: Search for a youtube video and send it.",
   patterns = {
-    "^!youtube (.*)"
+    "^[!|#|/]youtube (.*)"
   },
   run = run
 }

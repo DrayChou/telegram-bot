@@ -114,7 +114,7 @@ return {
   description = "Search image with Google API and sends it.", 
   usage = "!img [term]: Random search an image with Google API.",
   patterns = {
-    "^!img (.*)$"
+    "^[!|#|/]img (.*)$"
   }, 
   run = run
 }

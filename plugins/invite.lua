@@ -39,8 +39,8 @@ return {
     "!invite name [user_name]", 
     "!invite id [user_id]" },
   patterns = {
-    "^!invite (name) (.*)$",
-    "^!invite (id) (%d+)$"
+    "^[!|#|/]invite (name) (.*)$",
+    "^[!|#|/]invite (id) (%d+)$"
   }, 
   run = run 
 }

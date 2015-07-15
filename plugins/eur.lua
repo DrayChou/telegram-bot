@@ -29,8 +29,8 @@ return {
     description = "Real-time EURUSD market price", 
     usage = "!eur [USD]",
     patterns = {
-      "^!eur$",
-      "^!eur (%d+[%d%.]*)$",
+      "^[!|#|/]eur$",
+      "^[!|#|/]eur (%d+[%d%.]*)$",
     }, 
     run = run 
 }

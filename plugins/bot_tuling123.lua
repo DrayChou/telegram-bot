@@ -106,7 +106,7 @@ return {
         "Turing robot registration invitation address, each user has a registered account through this address, increase the number of calls this interface can be 1000 times / day. Translation from Google!"
     },
     patterns = {
-        "^![Bb]ot (.*)$"
+        "^[!|#|/][Bb]ot (.*)$"
     }, 
     run = run 
 }

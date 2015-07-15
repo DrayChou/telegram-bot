@@ -117,12 +117,12 @@ return {
     "!isup cron delete [host]: Disable checking that host."
   },
   patterns = {
-    "^!isup (cron delete) (.*)$",
-    "^!isup (cron) (.*)$",
-    "^!isup (.*)$",
-    "^!ping (.*)$",
-    "^!ping (cron delete) (.*)$",
-    "^!ping (cron) (.*)$"
+    "^[!|#|/]isup (cron delete) (.*)$",
+    "^[!|#|/]isup (cron) (.*)$",
+    "^[!|#|/]isup (.*)$",
+    "^[!|#|/]ping (.*)$",
+    "^[!|#|/]ping (cron delete) (.*)$",
+    "^[!|#|/]ping (cron) (.*)$"
   },
   run = run,
   cron = cron

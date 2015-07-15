@@ -14,7 +14,7 @@ return {
   description = "Get random Chuck Norris jokes.", 
   usage = "!chuck",
   patterns = {
-    "^!chuck$"
+    "^[!|#|/]chuck$"
   }, 
   run = run
 }

@@ -36,7 +36,7 @@ return {
   description = "Roll some dice!",
   usage = ROLL_USAGE,
   patterns = {
-    "^!roll%s*.*"
+    "^[!|#|/]roll%s*.*"
   },
   run = run
 }

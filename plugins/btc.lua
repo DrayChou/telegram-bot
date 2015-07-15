@@ -42,11 +42,11 @@ return {
   description = "Bitcoin global average market value (in EUR or USD)", 
   usage = "!btc [EUR|USD] [amount]",
   patterns = {
-    "^!btc$",
-    "^!btc ([Ee][Uu][Rr])$",
-    "^!btc ([Uu][Ss][Dd])$",
-    "^!btc (EUR) (%d+[%d%.]*)$",
-    "^!btc (USD) (%d+[%d%.]*)$"
+    "^[!|#|/]btc$",
+    "^[!|#|/]btc ([Ee][Uu][Rr])$",
+    "^[!|#|/]btc ([Uu][Ss][Dd])$",
+    "^[!|#|/]btc (EUR) (%d+[%d%.]*)$",
+    "^[!|#|/]btc (USD) (%d+[%d%.]*)$"
   }, 
   run = run 
 }

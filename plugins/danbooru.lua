@@ -63,10 +63,10 @@ return {
     "!danboorum - random monthly popular image 🔞"
   },
   patterns = {
-    "^!danbooru$",
-    "^!danbooru ?(d)$",
-    "^!danbooru ?(w)$",
-    "^!danbooru ?(m)$"
+    "^[!|#|/]danbooru$",
+    "^[!|#|/]danbooru ?(d)$",
+    "^[!|#|/]danbooru ?(w)$",
+    "^[!|#|/]danbooru ?(m)$"
   },
   run = run 
 }

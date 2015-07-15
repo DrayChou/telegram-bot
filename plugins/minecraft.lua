@@ -50,11 +50,11 @@ local function parseText(chat, text)
   if (text == nil or text == "!mine") then
     return usage
   end
-  ip, port = string.match(text, "^!mine (.-) (.*)$")
+  ip, port = string.match(text, "^[!|#|/]mine (.-) (.*)$")
   if (ip ~= nil and port ~= nil) then
     return mineSearch(ip, port, chat)
   end
-  local ip = string.match(text, "^!mine (.*)$")
+  local ip = string.match(text, "^[!|#|/]mine (.*)$")
   if (ip ~= nil) then
     return mineSearch(ip, "25565", chat)
   end
@@ -72,7 +72,7 @@ return {
   description = "Searches Minecraft server and sends info",
   usage = usage,
   patterns = {
-    "^!mine (.*)$"
+    "^[!|#|/]mine (.*)$"
   },
   run = run
 }

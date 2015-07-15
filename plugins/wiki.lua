@@ -168,10 +168,10 @@ return {
   description = "Searches Wikipedia and send results",
   usage = wikiusage,
   patterns = {
-    "^![Ww]iki(%w+) (search) (.+)$",
-    "^![Ww]iki (search) ?(.*)$",
-    "^![Ww]iki(%w+) (.+)$",
-    "^![Ww]iki ?(.*)$"
+    "^[!|#|/][Ww]iki(%w+) (search) (.+)$",
+    "^[!|#|/][Ww]iki (search) ?(.*)$",
+    "^[!|#|/][Ww]iki(%w+) (.+)$",
+    "^[!|#|/][Ww]iki ?(.*)$"
   },
   run = run
 }

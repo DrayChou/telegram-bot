@@ -65,8 +65,8 @@ return {
       "!isporn [url]"
    },
    patterns = {
-      "^!is[x|X] (.*)$",
-      "^!is[p|P]orn (.*)$"
+      "^[!|#|/]is[x|X] (.*)$",
+      "^[!|#|/]is[p|P]orn (.*)$"
    },
    run = run
 }

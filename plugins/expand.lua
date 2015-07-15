@@ -20,7 +20,7 @@ return {
    description = "Expand a shortened URL to the original one.",
    usage = "!expand [url]: Return the original URL",
    patterns = {
-      "^!expand (https?://[%w-_%.%?%.:/%+=&]+)$"
+      "^[!|#|/]expand (https?://[%w-_%.%?%.:/%+=&]+)$"
    },
    run = run
 }

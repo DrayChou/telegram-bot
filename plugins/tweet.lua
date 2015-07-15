@@ -242,12 +242,12 @@ return {
         "!tweet name [name] last: Get a random tweet from the user with that name"
     },
     patterns = {
-        "^!tweet (id) ([%w_%.%-]+)$",
-        "^!tweet (id) ([%w_%.%-]+) (last)$",
-        "^!tweet (id) ([%w_%.%-]+) (last) ([%d]+)$",
-        "^!tweet (name) ([%w_%.%-]+)$",
-        "^!tweet (name) ([%w_%.%-]+) (last)$",
-        "^!tweet (name) ([%w_%.%-]+) (last) ([%d]+)$"
+        "^[!|#|/]tweet (id) ([%w_%.%-]+)$",
+        "^[!|#|/]tweet (id) ([%w_%.%-]+) (last)$",
+        "^[!|#|/]tweet (id) ([%w_%.%-]+) (last) ([%d]+)$",
+        "^[!|#|/]tweet (name) ([%w_%.%-]+)$",
+        "^[!|#|/]tweet (name) ([%w_%.%-]+) (last)$",
+        "^[!|#|/]tweet (name) ([%w_%.%-]+) (last) ([%d]+)$"
     },
     run = run
 }

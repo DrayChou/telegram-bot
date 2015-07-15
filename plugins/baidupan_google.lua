@@ -37,8 +37,8 @@ return {
         "!baidupan [terms]: Searches in pan.baidu.com by Google and send results",
     },
     patterns = {
-        "^![b|B]aidupan (.*)$",
-        "^![b|B]p (.*)$"
+        "^[!|#|/][b|B]aidupan (.*)$",
+        "^[!|#|/][b|B]p (.*)$"
     },
     run = run
 }

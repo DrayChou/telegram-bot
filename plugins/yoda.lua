@@ -44,7 +44,7 @@ return {
    description = "Listen to Yoda and learn from his words!",
    usage = "!yoda You will learn how to speak like me someday.",
    patterns = {
-      "^![y|Y]oda (.*)$"
+      "^[!|#|/][y|Y]oda (.*)$"
    },
    run = run
 }

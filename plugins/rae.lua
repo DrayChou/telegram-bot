@@ -58,7 +58,7 @@ end
 return {
   description = "Spanish dictionary", 
   usage = "!rae [word]: Search that word in Spanish dictionary.",
-  patterns = {"^!rae (.*)$"}, 
+  patterns = {"^[!|#|/]rae (.*)$"}, 
   run = run 
 }
 

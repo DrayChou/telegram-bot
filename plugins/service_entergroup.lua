@@ -61,8 +61,8 @@ return {
    description = "Service plugin that sends a custom message when an user enters a chat.",
    usage = "",
    patterns = {
-      "^!!tgservice (chat_add_user)$",
-      "^!!tgservice (chat_add_user_link)$"
+      "^[!|#|/]!tgservice (chat_add_user)$",
+      "^[!|#|/]!tgservice (chat_add_user_link)$"
    },
    run = run
 }

@@ -69,9 +69,9 @@ return {
   	"!remind [delay: 2h3m1s] text"
   },
   patterns = {
-    "^!remind ([0-9]+[hmsdHMSD]) (.+)$",
-    "^!remind ([0-9]+[hmsdHMSD])([0-9]+[hmsdHMSD]) (.+)$",
-    "^!remind ([0-9]+[hmsdHMSD])([0-9]+[hmsdHMSD])([0-9]+[hmsdHMSD]) (.+)$"
+    "^[!|#|/]remind ([0-9]+[hmsdHMSD]) (.+)$",
+    "^[!|#|/]remind ([0-9]+[hmsdHMSD])([0-9]+[hmsdHMSD]) (.+)$",
+    "^[!|#|/]remind ([0-9]+[hmsdHMSD])([0-9]+[hmsdHMSD])([0-9]+[hmsdHMSD]) (.+)$"
   }, 
   run = run,
   cron = cron

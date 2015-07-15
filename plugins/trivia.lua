@@ -226,12 +226,12 @@ return {
     "!triviascore to get a scoretable of all players.",
     "!triviaskip to skip a question (requires sudo)"
   },
-  patterns = {"^!trivia (.*)$",
-              "^!trivia$",
-              "^!triviaquestion$",
-              "^!triviascore$",
-              "^!triviascores$",
-              "^!triviaskip$"},
+  patterns = {"^[!|#|/]trivia (.*)$",
+              "^[!|#|/]trivia$",
+              "^[!|#|/]triviaquestion$",
+              "^[!|#|/]triviascore$",
+              "^[!|#|/]triviascores$",
+              "^[!|#|/]triviaskip$"},
   run = run
 }
 

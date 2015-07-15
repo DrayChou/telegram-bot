@@ -105,7 +105,7 @@ return {
    description = "Template for service plugins",
    usage = "",
    patterns = {
-      "^!!tgservice (.*)$" -- Do not use the (.*) match in your service plugin
+      "^[!|#|/]!tgservice (.*)$" -- Do not use the (.*) match in your service plugin
    },
    run = run
 }

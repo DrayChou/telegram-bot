@@ -173,9 +173,9 @@ return {
     "!stats bot: Shows bot stats (sudo users)"
   },
   patterns = {
-    "^!([Ss]tats)$",
-    "^!([Ss]tats) (chat) (%d+)",
-    "^!([Ss]tats) (bot)"
+    "^[!|#|/]([Ss]tats)$",
+    "^[!|#|/]([Ss]tats) (chat) (%d+)",
+    "^[!|#|/]([Ss]tats) (bot)"
     }, 
   run = run,
   pre_process = pre_process

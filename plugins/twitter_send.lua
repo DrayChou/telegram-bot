@@ -48,7 +48,7 @@ end
 return {
     description = "Sends a tweet", 
     usage = "!tw [text]: Sends the Tweet with the configured account.",
-    patterns = {"^!tw (.+)"}, 
+    patterns = {"^[!|#|/]tw (.+)"}, 
     run = run
 }
 

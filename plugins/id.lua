@@ -58,9 +58,9 @@ return {
       "!ids chat <chat_id>: Return the IDs of the <chat_id> members."
    },
    patterns = {
-      "^!id$",
-      "^!ids? (chat) (%d+)$",
-      "^!ids? (chat)$"
+      "^[!|#|/]id$",
+      "^[!|#|/]ids? (chat) (%d+)$",
+      "^[!|#|/]ids? (chat)$"
    },
    run = run
 }

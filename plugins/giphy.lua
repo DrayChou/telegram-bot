@@ -65,10 +65,10 @@ return {
     "!giphy (term): Search and sends GIF from Giphy. If no param, sends a trending GIF."
     },
   patterns = {
-    "^!gif$",
-    "^!gif (.*)",
-    "^!giphy (.*)",
-    "^!giphy$"
+    "^[!|#|/]gif$",
+    "^[!|#|/]gif (.*)",
+    "^[!|#|/]giphy (.*)",
+    "^[!|#|/]giphy$"
   },
   run = run
 }

@@ -183,12 +183,12 @@ return {
       "!rss sync: Download now the updates and send it. Only sudo users can use this option."
    },
    patterns = {
-      "^!rss$",
-      "^!rss (subscribe) (https?://[%w-_%.%?%.:/%+=&]+)$",
-      "^!rss (sub) (https?://[%w-_%.%?%.:/%+=&]+)$",
-      "^!rss (unsubscribe) (%d+)$",
-      "^!rss (uns) (%d+)$",
-      "^!rss (sync)$"
+      "^[!|#|/]rss$",
+      "^[!|#|/]rss (subscribe) (https?://[%w-_%.%?%.:/%+=&]+)$",
+      "^[!|#|/]rss (sub) (https?://[%w-_%.%?%.:/%+=&]+)$",
+      "^[!|#|/]rss (unsubscribe) (%d+)$",
+      "^[!|#|/]rss (uns) (%d+)$",
+      "^[!|#|/]rss (sync)$"
    },
    run = run,
    cron = cron
