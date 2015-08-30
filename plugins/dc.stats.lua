@@ -88,6 +88,8 @@ local function get_users(msg, day_id)
         local users_info = {}
         -- 从用户消息的受众那边拿到用户列表
         if msg.to.members then
+			vardump(msg.to.members)
+	        
             for i,user in pairs(msg.to.members) do
                 if user.type == 'user' then
                     local user_id = user.id
