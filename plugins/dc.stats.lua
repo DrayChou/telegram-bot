@@ -56,7 +56,7 @@ local function get_users(msg, day_id)
         
         local users_info = {}
         -- 从用户消息的受众那边拿到用户列表
-        if table.getn(msg.to.members) then
+        if table.getn(msg.to.members) > 0 then
             for i,user in pairs(msg.to.members) do
                 if user.type == 'user' then
                     local user_id = user.id
@@ -415,7 +415,7 @@ return {
     description = "Plugin to update user stats.",
     usage = {
         "!stats: Returns a list of Username [telegram_id]: msg_num only top"..DEFAULT_SHOW_LIMIT,
-        "!stats t|today|20150528: Returns this day stats",
+        "!stats t|td|today|20150528: Returns this day stats",
         "!stats all: Returns All days stats",
         "!stats 20150528 "..DEFAULT_SHOW_LIMIT..": Returns a list only top "..DEFAULT_SHOW_LIMIT,
         "!state user_id: Returns this user All days stats"
