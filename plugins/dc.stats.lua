@@ -69,47 +69,11 @@ local function get_users(msg, day_id)
     if msg.to.type == 'chat' then
         local chat_id = msg.to.id
 
-  --      vardump(msg)
-  --      msg matches: 	^[!|#|/]([Ss]tats)$
-		--{
-		--  date = 1440922876,
-		--  flags = 257,
-		--  from = {
-		--    access_hash = 1,
-		--    first_name = "Dray",
-		--    flags = 259,
-		--    id = 64163268,
-		--    last_name = "",
-		--    phone = "16128881024",
-		--    print_name = "Dray_",
-		--    type = "user",
-		--    username = "drayc"
-		--  },
-		--  id = "5611566",
-		--  out = false,
-		--  service = false,
-		--  text = "!stats",
-		--  to = {
-		--    flags = 256,
-		--    id = 25936895,
-		--    members_num = 20,
-		--    print_name = "bot_test",
-		--    title = "bot_test",
-		--    type = "chat"
-		--  },
-		--  unread = true
-		--}
-
-		local receiver = get_receiver(msg)
-		local chat = 'chat#id'..msg.to.id
-    	local res = chat_info(chat, returnids, {receiver=receiver})
-		vardump("用户列表：")
-		vardump(res)
+        vardump("用户列表·2：")
 		vardump(users_info)
-		vardump(receiver)
-        
+		        
         -- 从用户消息的受众那边拿到用户列表
-        if table.getn(users_info) > 0 then
+        if users_info then
 	        for k, v in pairs(users_info) do
 		        local user_info = get_msgs_user_chat(v.id, chat_id, day_id)
 		        table.insert(users_info, user_info)
@@ -450,6 +414,15 @@ local function run(msg, matches)
             if matches[3] then
                 limit = tonumber(matches[3])
             end
+
+			-- 统计人数
+            local receiver = get_receiver(msg)
+			local chat = 'chat#id'..msg.to.id
+	    	local res = chat_info(chat, returnids, {receiver=receiver})
+			vardump("用户列表·1：")
+			vardump(res)
+			vardump(users_info)
+			vardump(receiver)
             
             return get_char_stats(msg, day_id, limit)
         elseif is_sudo(msg) then
