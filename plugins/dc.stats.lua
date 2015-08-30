@@ -27,20 +27,20 @@ local function user_print_name(user)
     return text
 end
 
-local users_info = {}
+local users_list = {}
 -- 回调函数 返回所有成员的信息
 local function returnids(cb_extra, success, result)
 	for k,v in pairs(result.members) do
 	    local user_info = {}
 	    user_info.id = tonumber(v.id)
 	    user_info.name = user_print_name(v)..' ('..v.id..')'
-	    table.insert(users_info, user_info)
+	    table.insert(users_list, user_info)
 	end
 
 	vardump("returnids：")
-	vardump(users_info)
+	vardump(users_list)
 
-	return users_info
+	return users_list
 end
 
 -- Returns a table with `name` and `msgs` and `msgs_day`
@@ -67,14 +67,15 @@ end
 -- 得到用户的信息列表
 local function get_users(msg, day_id)
     if msg.to.type == 'chat' then
+	    local users_info = {}
         local chat_id = msg.to.id
 
         vardump("用户列表·2：")
-		vardump(users_info)
+		vardump(users_list)
 		        
         -- 从用户消息的受众那边拿到用户列表
-        if users_info then
-	        for k, v in pairs(users_info) do
+        if users_list then
+	        for k, v in pairs(users_list) do
 		        local user_info = get_msgs_user_chat(v.id, chat_id, day_id)
 		        table.insert(users_info, user_info)
 	        end
@@ -421,7 +422,7 @@ local function run(msg, matches)
 	    	local res = chat_info(chat, returnids, {receiver=receiver})
 			vardump("用户列表·1：")
 			vardump(res)
-			vardump(users_info)
+			vardump(users_list)
 			vardump(receiver)
             
             return get_char_stats(msg, day_id, limit)
