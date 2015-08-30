@@ -7,22 +7,6 @@ local NUM_MSG_MAX = 5
 local TIME_CHECK = 4 -- seconds
 local DEFAULT_SHOW_LIMIT = 10 -- 显示的最多条数
 
-local users_info = {}
--- 回调函数 返回所有成员的信息
-local function returnids(cb_extra, success, result)
-	for k,v in pairs(result.members) do
-	    local user_info = {}
-	    user_info.id = tonumber(v.id)
-	    user_info.name = user_print_name(v)..' ('..v.id..')'
-	    table.insert(users_info, user_info)
-	end
-
-	vardump("returnids：")
-	vardump(users_info)
-
-	return users_info
-end
-
 local function user_print_name(user)
     local text = ''
     if user.print_name then
@@ -43,6 +27,21 @@ local function user_print_name(user)
     return text
 end
 
+local users_info = {}
+-- 回调函数 返回所有成员的信息
+local function returnids(cb_extra, success, result)
+	for k,v in pairs(result.members) do
+	    local user_info = {}
+	    user_info.id = tonumber(v.id)
+	    user_info.name = user_print_name(v)..' ('..v.id..')'
+	    table.insert(users_info, user_info)
+	end
+
+	vardump("returnids：")
+	vardump(users_info)
+
+	return users_info
+end
 
 -- Returns a table with `name` and `msgs` and `msgs_day`
 local function get_msgs_user_chat(user_id, chat_id, day_id)
