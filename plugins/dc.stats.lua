@@ -87,6 +87,7 @@ local function get_users(msg, day_id)
 
 		vardump(chat_info(msg.to.id))
 		vardump(chat_info(msg.to.print_name))
+		vardump(chat_info('Top_Family'))
         
         local users_info = {}
         -- 从用户消息的受众那边拿到用户列表
