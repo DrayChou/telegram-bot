@@ -100,7 +100,7 @@ local function get_users(msg, day_id)
 		--  unread = true
 		--}
 
-		local receiver = cb_extra.receiver
+		local receiver = get_receiver(msg)
 		local chat = 'chat#id'..msg.to.id
     	local res = chat_info(chat, returnids, {receiver=receiver})
 		vardump("用户列表：")
