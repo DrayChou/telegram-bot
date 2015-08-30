@@ -10,14 +10,16 @@ local DEFAULT_SHOW_LIMIT = 10 -- 显示的最多条数
 local users_info = {}
 -- 回调函数 返回所有成员的信息
 local function returnids(cb_extra, success, result)
-	local receiver = cb_extra.receiver
-	local chat_id = "chat#id"..result.id
-   
 	for k,v in pairs(result.members) do
 	 	local user_id = user.id
-	    local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+	    local user_info = get_msgs_user_chat(user_id, result.id, day_id)
 	    table.insert(users_info, user_info)
 	end
+
+	vardump("returnids：")
+	vardump(users_info)
+
+	return users_info
 end
 
 local function user_print_name(user)
@@ -98,14 +100,17 @@ local function get_users(msg, day_id)
 		--  unread = true
 		--}
 
+		local receiver = cb_extra.receiver
 		local chat = 'chat#id'..msg.to.id
     	local res = chat_info(chat, returnids, {receiver=receiver})
 		vardump("用户列表：")
 		vardump(res)
 		vardump(users_info)
+		vardump(receiver)
         
         -- 从用户消息的受众那边拿到用户列表
-        if table.getn(users_info) == 0 then
+        if table.getn(users_info) > 0 then
+        else
 		    local hash = 'chat:'..chat_id..':users'
 		    local users = redis:smembers(hash)
 		    --        -- Get user info
