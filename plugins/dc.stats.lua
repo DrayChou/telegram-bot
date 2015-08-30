@@ -409,11 +409,10 @@ local function run(msg, matches)
     if matches[1]:lower() == "stats" then
         if msg.to.type == 'chat' then
             -- 解析第二个参数
-            local day_id = os.date("%Y%m%d")
             if matches[2] then
-                day_id = matches[2]:upper()
+                local day_id = matches[2]:upper()
         	else
-	        	day_id = 'ALL'
+	        	local day_id = 'ALL'
             end
             
             -- 解析查询的数量
@@ -422,6 +421,10 @@ local function run(msg, matches)
             -- 默认总表单输出数据量为每日的一半
             if day_id == 'ALL' then
                 limit = limit/2
+            end
+
+            if day_id == 'TODAY' or day_id == 'TD' or day_id == 'T' then
+	            day_id = os.date("%Y%m%d")
             end
             
             if matches[3] then
