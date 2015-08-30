@@ -87,7 +87,9 @@ local function get_users(msg, day_id)
         
         local users_info = {}
         -- 从用户消息的受众那边拿到用户列表
-        if msg.to.members then	        
+        if msg.to.members then
+			vardump(msg.to.members)
+	              
             for i,user in pairs(msg.to.members) do
                 if user.type == 'user' then
                     local user_id = user.id
@@ -409,10 +411,11 @@ local function run(msg, matches)
     if matches[1]:lower() == "stats" then
         if msg.to.type == 'chat' then
             -- 解析第二个参数
+            local day_id = os.date("%Y%m%d")
             if matches[2] then
-                local day_id = matches[2]:upper()
+                day_id = matches[2]:upper()
         	else
-	        	local day_id = 'ALL'
+	        	day_id = 'ALL'
             end
             
             -- 解析查询的数量
