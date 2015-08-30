@@ -7,31 +7,20 @@ local NUM_MSG_MAX = 5
 local TIME_CHECK = 4 -- seconds
 local DEFAULT_SHOW_LIMIT = 10 -- 显示的最多条数
 
-local user_list = {}
+
 -- 回调函数 返回所有成员的信息
 local function returnids(cb_extra, success, result)
-   local receiver = cb_extra.receiver
-   local chat_id = "chat#id"..result.id
+	local user_list = {}
+	local receiver = cb_extra.receiver
+	local chat_id = "chat#id"..result.id
    
-   for k,v in pairs(result.members) do
-     	local user_id = user.id
-        local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-        table.insert(user_list, user_info)
-   end
-
-	vardump(user_list)
-   return user_list
-end
-
--- 加载成员列表
-local function get_users2(msg)
-	local receiver = get_receiver(msg)
-	local chat = 'chat#id'..msg.to.id
-    local res = chat_info(chat, returnids, {receiver=receiver})
-
-    vardump(res)
-
-    return res
+	for k,v in pairs(result.members) do
+	 	local user_id = user.id
+	    local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+	    table.insert(user_list, user_info)
+	end
+	
+	return user_list
 end
 
 local function user_print_name(user)
@@ -112,15 +101,15 @@ local function get_users(msg, day_id)
 		--  unread = true
 		--}
 
-		local a = get_users2(msg)
-		vardump(a)
+		local chat = 'chat#id'..msg.to.id
+    	local res = chat_info(chat, returnids, {receiver=receiver})
+		vardump("用户列表：")
+		vardump(res)
         
         local users_info = {}
         -- 从用户消息的受众那边拿到用户列表
-        if msg.to.members then
-			vardump(msg.to.members)
-	              
-            for i,user in pairs(msg.to.members) do
+        if res then
+            for i,user in pairs(res) do
                 if user.type == 'user' then
                     local user_id = user.id
                     local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
