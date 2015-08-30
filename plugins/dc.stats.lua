@@ -53,18 +53,20 @@ end
 local function get_users(msg, day_id)
     if msg.to.type == 'chat' then
         local chat_id = msg.to.id
+
+        vardump(msg)
         
         local users_info = {}
         -- 从用户消息的受众那边拿到用户列表
-        if table.getn(msg.to.members) > 0 then
-            for i,user in pairs(msg.to.members) do
-                if user.type == 'user' then
-                    local user_id = user.id
-                    local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-                    table.insert(users_info, user_info)
-                end
-            end
-        else
+        --if table.getn(msg.to.members) > 0 then
+        --    for i,user in pairs(msg.to.members) do
+        --        if user.type == 'user' then
+        --            local user_id = user.id
+        --            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+        --            table.insert(users_info, user_info)
+        --        end
+        --    end
+        --else
 		    local hash = 'chat:'..chat_id..':users'
 		    local users = redis:smembers(hash)
 		    --        -- Get user info
@@ -73,7 +75,7 @@ local function get_users(msg, day_id)
 		        local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
 		        table.insert(users_info, user_info)
 		    end
-        end
+        --end
         
         return users_info
     end
