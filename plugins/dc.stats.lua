@@ -54,19 +54,48 @@ local function get_users(msg, day_id)
     if msg.to.type == 'chat' then
         local chat_id = msg.to.id
 
-        vardump(msg)
+  --      vardump(msg)
+  --      msg matches: 	^[!|#|/]([Ss]tats)$
+		--{
+		--  date = 1440922876,
+		--  flags = 257,
+		--  from = {
+		--    access_hash = 1,
+		--    first_name = "Dray",
+		--    flags = 259,
+		--    id = 64163268,
+		--    last_name = "",
+		--    phone = "16128881024",
+		--    print_name = "Dray_",
+		--    type = "user",
+		--    username = "drayc"
+		--  },
+		--  id = "5611566",
+		--  out = false,
+		--  service = false,
+		--  text = "!stats",
+		--  to = {
+		--    flags = 256,
+		--    id = 25936895,
+		--    members_num = 20,
+		--    print_name = "bot_test",
+		--    title = "bot_test",
+		--    type = "chat"
+		--  },
+		--  unread = true
+		--}
         
         local users_info = {}
         -- 从用户消息的受众那边拿到用户列表
-        --if table.getn(msg.to.members) > 0 then
-        --    for i,user in pairs(msg.to.members) do
-        --        if user.type == 'user' then
-        --            local user_id = user.id
-        --            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-        --            table.insert(users_info, user_info)
-        --        end
-        --    end
-        --else
+        if msg.to.members then
+            for i,user in pairs(msg.to.members) do
+                if user.type == 'user' then
+                    local user_id = user.id
+                    local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+                    table.insert(users_info, user_info)
+                end
+            end
+        else
 		    local hash = 'chat:'..chat_id..':users'
 		    local users = redis:smembers(hash)
 		    --        -- Get user info
@@ -75,7 +104,7 @@ local function get_users(msg, day_id)
 		        local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
 		        table.insert(users_info, user_info)
 		    end
-        --end
+        end
         
         return users_info
     end
