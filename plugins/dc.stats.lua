@@ -39,7 +39,7 @@ local function get_msgs_user_chat(user_id, chat_id, day_id)
         um_hash = 'msgs:'..user_id..':'..chat_id
     end
     
-    if day_id == 'TODAY' or day_id == 'TD' then
+    if day_id == 'TODAY' or day_id == 'TD' or day_id == 'T' then
         um_hash = 'msgs:'..user_id..':'..chat_id..':'..os.date("%Y%m%d")
     end
     
@@ -49,32 +49,31 @@ local function get_msgs_user_chat(user_id, chat_id, day_id)
     return user_info
 end
 
-
 -- 得到用户的信息列表
 local function get_users(msg, day_id)
     if msg.to.type == 'chat' then
         local chat_id = msg.to.id
         
         local users_info = {}
-        --        -- 从用户消息的受众那边拿到用户列表
-        --        if msg.to.members then
-        --            for i,user in pairs(msg.to.members) do
-        --                if user.type == 'user' then
-        --                    local user_id = user.id
-        --                    local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-        --                    table.insert(users_info, user_info)
-        --                end
-        --            end
-        --        else
-        local hash = 'chat:'..chat_id..':users'
-        local users = redis:smembers(hash)
-        --        -- Get user info
-        for i = 1, #users do
-            local user_id = users[i]
-            local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
-            table.insert(users_info, user_info)
+        -- 从用户消息的受众那边拿到用户列表
+        if table.getn(msg.to.members) then
+            for i,user in pairs(msg.to.members) do
+                if user.type == 'user' then
+                    local user_id = user.id
+                    local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+                    table.insert(users_info, user_info)
+                end
+            end
+        else
+		    local hash = 'chat:'..chat_id..':users'
+		    local users = redis:smembers(hash)
+		    --        -- Get user info
+		    for i = 1, #users do
+		        local user_id = users[i]
+		        local user_info = get_msgs_user_chat(user_id, chat_id, day_id)
+		        table.insert(users_info, user_info)
+		    end
         end
-        --        end
         
         return users_info
     end
@@ -382,6 +381,8 @@ local function run(msg, matches)
             local day_id = os.date("%Y%m%d")
             if matches[2] then
                 day_id = matches[2]:upper()
+        	else
+	        	day_id = 'ALL'
             end
             
             -- 解析查询的数量
@@ -414,7 +415,7 @@ return {
     description = "Plugin to update user stats.",
     usage = {
         "!stats: Returns a list of Username [telegram_id]: msg_num only top"..DEFAULT_SHOW_LIMIT,
-        "!stats 20150528: Returns this day stats",
+        "!stats t|today|20150528: Returns this day stats",
         "!stats all: Returns All days stats",
         "!stats 20150528 "..DEFAULT_SHOW_LIMIT..": Returns a list only top "..DEFAULT_SHOW_LIMIT,
         "!state user_id: Returns this user All days stats"

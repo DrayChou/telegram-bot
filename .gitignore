@@ -2,3 +2,4 @@ res/
 data/
 .luarocks
 GliderProperties.proj
+/nbproject/private/
