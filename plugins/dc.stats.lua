@@ -11,8 +11,9 @@ local users_info = {}
 -- 回调函数 返回所有成员的信息
 local function returnids(cb_extra, success, result)
 	for k,v in pairs(result.members) do
-	 	local user_id = user.id
-	    local user_info = get_msgs_user_chat(user_id, result.id, day_id)
+	    local user_info = {}
+	    user_info.id = tonumber(v.id)
+	    user_info.name = user_print_name(v)..' ('..v.id..')'
 	    table.insert(users_info, user_info)
 	end
 
@@ -110,6 +111,10 @@ local function get_users(msg, day_id)
         
         -- 从用户消息的受众那边拿到用户列表
         if table.getn(users_info) > 0 then
+	        for k, v in pairs(users_info) do
+		        local user_info = get_msgs_user_chat(v.id, chat_id, day_id)
+		        table.insert(users_info, user_info)
+	        end
         else
 		    local hash = 'chat:'..chat_id..':users'
 		    local users = redis:smembers(hash)
