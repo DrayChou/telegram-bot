@@ -7,9 +7,47 @@ local NUM_MSG_MAX = 5
 local TIME_CHECK = 4 -- seconds
 local DEFAULT_SHOW_LIMIT = 10 -- 显示的最多条数
 
+-- 拿去间隔时间的日期 20151103 2015-11-03
+function day_step(old_day,step)
+    local y,m,d
+    if("0" ~= string.sub(old_day,5,5)) then
+        m=string.sub(old_day,5,6)
+    else
+        m=string.sub(old_day,6,6)
+    end
+    
+    if("0" ~= string.sub(old_day,7,7)) then
+        d=string.sub(old_day,7,8)
+    else
+        d=string.sub(old_day,8,8)
+    end
+    
+    y=string.sub(old_day,0,4)
+    
+    local old_time=os.time{year=y,month=m,day=d}
+    local new_time=old_time+86400*step
+    
+    local new_day=os.date("*t",new_time)
+    local res=""
+    
+    if(tonumber(new_day.day)<10 and tonumber(new_day.month)<10)then
+        res=new_day.year.."0"..new_day.month.."0"..new_day.day
+    elseif tonumber(new_day.month)<10 then
+        res=new_day.year.."0"..new_day.month..new_day.day
+        
+    elseif tonumber(new_day.day)<10 then
+        res=new_day.year..new_day.month.."0"..new_day.day
+    else
+        res=new_day.year..new_day.month..new_day.day
+    end
+    return res
+end
+
 local function user_print_name(user)
     local text = ''
-    if user.print_name then
+    if user.username then
+        text = text..' @'..user.username
+    elseif user.print_name then
         text = user.print_name
     else
         if user.first_name then
@@ -19,11 +57,6 @@ local function user_print_name(user)
             text = text..user.last_name
         end
     end
-    
-    if user.username then
-        text = text..' @'..user.username
-    end
-    
     return text
 end
 
@@ -37,8 +70,8 @@ local function returnids(cb_extra, success, result)
 	    table.insert(users_list, user_info)
 	end
     
-	vardump("returnids：")
-	vardump(users_list)
+	-- vardump("returnids：")
+	-- vardump(users_list)
     
 	return users_list
 end
@@ -70,8 +103,8 @@ local function get_users(msg, day_id)
 	    local users_info = {}
         local chat_id = msg.to.id
         
-        vardump("用户列表·2：")
-		vardump(users_list)
+        -- vardump("用户列表·2：")
+		-- vardump(users_list)
         
         -- 从用户消息的受众那边拿到用户列表
         --if users_list then
@@ -145,27 +178,29 @@ local function rebuild_stats_data(search_chat_id, search_day_id)
             redis:set('stats:chat:'..c..':'..d, n)
         end
         
+        vardump("max_day:"..mxd..'\t'.."min_day:"..mid)
+        
         if search_day_id == '*' then
             redis:set('stats:chat:'..c..':max_day', mxd)
             redis:set('stats:chat:'..c..':min_day', mid)
         else
-            local max_day = tonumber(redis:get('stats:chat:'..c..':max_day') or 0)
-            local min_day = tonumber(redis:get('stats:chat:'..c..':min_day') or 0)
-            local max_msgs = tonumber(redis:get('stats:chat:'..c..':'..max_day) or 0)
-            local min_msgs = tonumber(redis:get('stats:chat:'..c..':'..min_day) or 0)
-            
-            if mxd == today_id then
-                vardump("mxd == today_id:"..today_id)
+            if tonumber(search_day_id) == today_id then
+                vardump("search_day_id == today_id:"..today_id)
             else
+                local max_day = tonumber(redis:get('stats:chat:'..c..':max_day') or 0)
+                local min_day = tonumber(redis:get('stats:chat:'..c..':min_day') or 0)
+                local max_msgs = tonumber(redis:get('stats:chat:'..c..':'..max_day) or 0)
+                local min_msgs = tonumber(redis:get('stats:chat:'..c..':'..min_day) or 0)
+                
+                vardump("old_max_day:"..max_day..'\t'.."old_max_msgs:"..max_msgs..'\t'.."old_min_day:"..min_day..'\t'.."old_min_msgs:"..min_msgs)
+                
                 if mxm > max_msgs then
+                    vardump("new_max_day:"..mxd)
                     redis:set('stats:chat:'..c..':max_day', mxd)
                 end
-            end
-            
-            if mim == today_id then
-                vardump("mim == today_id:"..today_id)
-            else
+                
                 if mim < min_msgs then
+                    vardump("new_min_day:"..mid)
                     redis:set('stats:chat:'..c..':min_day', mid)
                 end
             end
@@ -354,7 +389,9 @@ local function pre_process(msg)
     
     -- 刷新重新统计这个群的每日最多和最少
     if msg.to.type == 'chat' then
-        rebuild_stats_data(msg.to.id,os.date("%Y%m%d"))
+        local today_id = os.date("%Y%m%d")
+        rebuild_stats_data(msg.to.id, today_id)
+        rebuild_stats_data(msg.to.id, day_step(today_id, -1))
     end
     
     return msg
@@ -429,10 +466,10 @@ local function run(msg, matches)
             local receiver = get_receiver(msg)
 			local chat = 'chat#id'..msg.to.id
 	    	local res = chat_info(chat, returnids, {receiver=receiver})
-			vardump("用户列表·1：")
-			vardump(res)
-			vardump(users_list)
-			vardump(receiver)
+			-- vardump("用户列表·1：")
+			-- vardump(res)
+			-- vardump(users_list)
+			-- vardump(receiver)
             
             return get_char_stats(msg, day_id, limit)
         elseif is_sudo(msg) then
